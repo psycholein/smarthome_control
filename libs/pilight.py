@@ -9,6 +9,8 @@ import json
 
 class PilightClient(threading.Thread):
 
+  repeat_period = 10
+
   def __init__(self):
     threading.Thread.__init__(self)
     self.callbacks = []
@@ -43,13 +45,21 @@ class PilightClient(threading.Thread):
     return responses.values()
 
   def registerCallback(self, callback, states = ['up', 'down']):
-    self.callbacks.append({'callback': callback, 'states': states})
+    self.callbacks.append({'func': callback, 'states': states})
+
+  def checkRepeatStatus(self, data):
+    diff = set(self.lastData.get('code', {})) - set(data.get('code', {}))
+    if len(diff) > 0: return True
+
+    val = self.lastData.get('repeats', 0) + self.repeat_period
+    if val < data.get('repeats', 0): return False
+    return True
 
   def doCallbackIf(self, callback, data):
     if data.get('code', {}).get('state') in callback.get('states', []):
-      if data.get('repeats', 0) % 10 == 1:
+      if self.checkRepeatStatus(data):
         self.saveData(data)
-        func = callback.get('callback', None)
+        func = callback.get('func', None)
         if func: func(data)
 
   def checkCallbacks(self, data):
