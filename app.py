@@ -7,28 +7,29 @@ class App:
   def __init__(self):
     self.hue = Hue()
     self.hue.start()
-    self.pilight = PilightClient(self.callback)
+    self.pilight = PilightClient()
+    self.pilight.registerCallback(self.callback)
     self.pilight.start()
-    print "start"
     self.serve()
-    print "end"
 
   def serve(self):
+    threads = [self.hue, self.pilight]
     while True:
       try:
-        if not self.pilight.isAlive(): return
-        self.pilight.join(1)
+        run = False
+        for thread in threads:
+          thread.join(1)
+          if thread.isAlive(): run = True
+        if not run: return
       except KeyboardInterrupt:
         self.pilight.stop()
         self.hue.stop()
 
   def callback(self, data):
-    print data
-    print "\n"
     code = data.get('code', None)
     if not code: return
 
-    print code
+    # TODO config
 
     if code.get('id', -1) == 13583562:
       if code.get('unit', -1) == 10:
@@ -62,7 +63,6 @@ class App:
           self.hue.do({'light': 5, 'cmd': 'on', 'val': True})
         if code.get('state', '') == 'down' :
           self.hue.do({'light': 5, 'cmd': 'on', 'val': False})
-
 
 
 def main():

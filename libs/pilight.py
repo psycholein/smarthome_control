@@ -9,11 +9,10 @@ import json
 
 class PilightClient(threading.Thread):
 
-  def __init__(self, callback, states = ['up', 'down']):
+  def __init__(self):
     threading.Thread.__init__(self)
-    self.callback = callback
-    self.states   = states
-    self.lastData = None
+    self.callbacks = []
+    self.lastData  = {}
 
   def discover(self, service, timeout=2, retries=1):
     group = ("239.255.255.250", 1900)
@@ -43,22 +42,30 @@ class PilightClient(threading.Thread):
             break
     return responses.values()
 
-  def canCallback(self, data):
-    return data.get('repeats', 0) % 10 == 1 and \
-           data.get('code', {}).get('state') in self.states
+  def registerCallback(self, callback, states = ['up', 'down']):
+    self.callbacks.append({'callback': callback, 'states': states})
 
-  def saveLastData(self, data):
+  def doCallbackIf(self, callback, data):
+    if data.get('code', {}).get('state') in callback.get('states', []):
+      if data.get('repeats', 0) % 10 == 1:
+        self.saveData(data)
+        func = callback.get('callback', None)
+        if func: func(data)
+
+  def checkCallbacks(self, data):
+    for callback in self.callbacks:
+      self.doCallbackIf(callback, data)
+
+  def saveData(self, data):
     self.lastData = data
 
   def decode(self, data):
     try:
       data = json.loads(data)
+      print data
     except:
       return
-
-    if self.canCallback(data):
-      self.saveLastData(data)
-      self.callback(data)
+    self.checkCallbacks(data)
 
   def stop(self):
     self.stopped = True
