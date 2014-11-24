@@ -1,10 +1,13 @@
 pilight_hue
 ===========
 
-Control Hue with pilight 433MHz Receiver / Sender and Raspberry Pi
+Control Hue with pilight 433MHz Receiver / Transmitter and Raspberry Pi
 
-Receiver / Sender:
+Receiver / Transmitter:<br/>
 http://www.ebay.de/itm/3400RF-433Mhz-Superheterodyne-Transmitter-and-Receiver-Module-Link-Kit-Arduino-/381048465724
 
-Service:
+Install Receiver / Transmitter:<br>
+http://wiki.pilight.org/doku.php/electronics
+
+Service:<br/>
 http://www.pilight.org/
