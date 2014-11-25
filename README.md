@@ -11,3 +11,7 @@ http://wiki.pilight.org/doku.php/electronics
 
 Service:<br/>
 http://www.pilight.org/
+
+Remote Control:<br/>
+http://www.amazon.de/dp/B0073TRG44 <br/>
+http://www.amazon.de/dp/B005LGU8PU
