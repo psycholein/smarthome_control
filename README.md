@@ -15,3 +15,6 @@ http://www.pilight.org/
 Remote Control:<br/>
 http://www.amazon.de/dp/B0073TRG44 <br/>
 http://www.amazon.de/dp/B005LGU8PU
+
+TODO:
+Service for Commands
