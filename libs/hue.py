@@ -3,9 +3,9 @@ from phue import Bridge
 
 class Hue(threading.Thread):
 
-  def __init__(self):
+  def __init__(self, ip):
     threading.Thread.__init__(self)
-    self.bridge = Bridge('192.168.0.206')
+    self.bridge = Bridge(ip)
     self.bridge.connect()
 
     self.process  = threading.Event()

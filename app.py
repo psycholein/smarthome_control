@@ -5,7 +5,7 @@ from libs.hue import Hue
 class App:
 
   def __init__(self):
-    self.hue = Hue()
+    self.hue = Hue('192.168.0.206')
     self.hue.start()
     self.pilight = PilightClient()
     self.pilight.registerCallback(self.callback)
