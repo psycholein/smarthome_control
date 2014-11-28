@@ -47,10 +47,17 @@ class PilightClient(threading.Thread):
   def registerCallback(self, callback, states = ['up', 'down']):
     self.callbacks.append({'func': callback, 'states': states})
 
+  def diffCount(self,a,b):
+    diff = 0
+    for key,val in a.items():
+      if key != 'repeats' and b.has_key(key):
+        if b[key] != val:
+           diff += 1
+    return diff
+
   def checkRepeatStatus(self, data):
-    diff  = abs(set(self.lastData.get('code', {})) - set(data.get('code', {})))
-    diff += abs(set(self.lastData) - set(data))
-    if len(diff) > 1: return True
+    diff = self.diffCount(self.lastData, data)
+    if diff > 0: return True
 
     val = self.lastData.get('repeats', 0) + self.repeat_period
     if val < data.get('repeats', 0): return False
