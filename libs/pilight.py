@@ -50,7 +50,8 @@ class PilightClient(threading.Thread):
   def removeCallback(self, callback):
     for key,val in self.callbacks:
       if val.get('func') == callback:
-        return del self.callbacks[key]
+        del self.callbacks[key]
+	return
 
   def diffCount(self,a,b):
     diff = 0
