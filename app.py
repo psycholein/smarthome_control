@@ -1,6 +1,7 @@
 import time
 from libs.pilight import PilightClient
 from libs.hue import Hue
+from libs.webserver import Webserver
 
 class App:
 
@@ -10,6 +11,10 @@ class App:
     self.pilight = PilightClient()
     self.pilight.registerCallback(self.callback)
     self.pilight.start()
+
+    self.webserver = Webserver()
+    self.webserver.start()
+
     self.serve()
 
   def serve(self):
@@ -20,7 +25,9 @@ class App:
         for thread in threads:
           thread.join(1)
           if thread.isAlive(): run = True
-        if not run: return
+        if not run:
+          self.webserver.stop()
+          return
       except KeyboardInterrupt:
         self.pilight.stop()
         self.hue.stop()

@@ -47,6 +47,11 @@ class PilightClient(threading.Thread):
   def registerCallback(self, callback, states = ['up', 'down']):
     self.callbacks.append({'func': callback, 'states': states})
 
+  def removeCallback(self, callback):
+    for key,val in self.callbacks:
+      if val.get('func') == callback
+        return del self.callbacks[key]
+
   def diffCount(self,a,b):
     diff = 0
     for key,val in a.items():
