@@ -18,6 +18,7 @@ class App:
     self.serve()
 
   def serve(self):
+    print "started!\n"
     threads = [self.hue, self.pilight]
     while True:
       try:
