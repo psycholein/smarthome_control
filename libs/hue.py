@@ -1,4 +1,4 @@
-import threading, time
+import threading
 from phue import Bridge
 
 class Hue(threading.Thread):
