@@ -24,6 +24,12 @@ class Hue(threading.Thread):
     self.commands.insert(0, command)
     self.process.set()
 
+  def RGB2CIE(self, r, g, b):
+    x = 0.4124*r + 0.3576*g + 0.1805*b
+    y = 0.2126*r + 0.7152*g + 0.0722*b
+    z = 0.0193*r + 0.1192*g + 0.9505*b
+    return [x / (x + y + z), y / (x + y + z)]
+
   def _dispatch(self):
     while len(self.commands) > 0 and self.running:
       command = self.commands.pop()

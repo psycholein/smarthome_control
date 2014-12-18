@@ -55,7 +55,7 @@ class App:
 
     if code.get('id', -1) == 13184550:
       if code.get('all', -1) == 1:
-        self.hue.do({'light': [1,2,3,4,5], 'cmd': 'on', 'val': False})
+        self.hue.do({'light': [1,2,3,5], 'cmd': 'on', 'val': False})
       if code.get('unit', -1) == 0:
         if code.get('state', '') == 'up' :
           self.hue.do({'light': [1,2], 'cmd': 'on', 'val': True})
@@ -72,6 +72,30 @@ class App:
         if code.get('state', '') == 'down' :
           self.hue.do({'light': 5, 'cmd': 'on', 'val': False})
 
+
+    # Schlafzimmer
+    if code.get('id', -1) == 13205286 or code.get('id', -1) == 13205202:
+      if code.get('all', -1) == 1:
+        self.hue.do({'light': [4], 'cmd': 'on', 'val': False})
+      if code.get('unit', -1) == 0:
+        if code.get('state', '') == 'up' :
+          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 1})
+          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
+        if code.get('state', '') == 'down' :
+          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 75})
+          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
+      if code.get('unit', -1) == 1:
+        if code.get('state', '') == 'up' :
+          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 150})
+          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
+        if code.get('state', '') == 'down' :
+          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 255})
+          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
+      if code.get('unit', -1) == 2:
+        if code.get('state', '') == 'up' :
+          self.hue.do({'light': 4, 'cmd': 'xy', 'val': self.hue.RGB2CIE(0,255,0)})
+        if code.get('state', '') == 'down' :
+          self.hue.do({'light': 4, 'cmd': 'xy', 'val': self.hue.RGB2CIE(255,255,255)})
 
 def main():
   App()
