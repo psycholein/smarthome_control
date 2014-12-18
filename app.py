@@ -79,18 +79,18 @@ class App:
         self.hue.do({'light': [4], 'cmd': 'on', 'val': False})
       if code.get('unit', -1) == 0:
         if code.get('state', '') == 'up' :
+          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
           self.hue.do({'light': 4, 'cmd': 'bri', 'val': 1})
-          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
         if code.get('state', '') == 'down' :
-          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 75})
           self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
+          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 75})
       if code.get('unit', -1) == 1:
         if code.get('state', '') == 'up' :
+          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
           self.hue.do({'light': 4, 'cmd': 'bri', 'val': 150})
-          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
         if code.get('state', '') == 'down' :
-          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 255})
           self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
+          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 255})
       if code.get('unit', -1) == 2:
         if code.get('state', '') == 'up' :
           self.hue.do({'light': 4, 'cmd': 'xy', 'val': self.hue.RGB2CIE(0,255,0)})
