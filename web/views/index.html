@@ -13,7 +13,7 @@
       <div id="climate">
         <ul>
           {% set items = output.getValues() %}
-          {% for key in items %}
+          {% for key in sorted(items) %}
             <li>
               <label>{{ items.get(key).get('room') }}:</label>
               <span class="temperature">{{ items.get(key).get('temperature') }}°C,</span>
