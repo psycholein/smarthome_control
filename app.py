@@ -18,7 +18,7 @@ class App:
     self.output.addRoom(1433, 'Arbeitszimmer')
     self.output.addRoom(1463, 'Schlafzimmer')
     self.output.addRoom(1324, 'Kinderzimmer')
-    self.output.addRoom(1351, 'Bad')
+    self.output.addRoom(1351, 'Badezimmer')
 
     self.webserver = Webserver(self.output)
     self.webserver.start()
