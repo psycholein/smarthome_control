@@ -4,9 +4,12 @@ import tornado.websocket
 import threading, os
 
 class IndexHandler(tornado.web.RequestHandler):
+  def initialize(self, output):
+    self.output = output
+
   @tornado.web.asynchronous
   def get(self):
-    self.render('index.html')
+    self.render('index.html', output=self.output)
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
   def initialize(self, clients, dispatcher):
@@ -44,7 +47,7 @@ class Clients:
 
 
 class Webserver(threading.Thread):
-  def __init__(self, dispatcher = None):
+  def __init__(self, output = None, dispatcher = None):
     super(self.__class__, self).__init__()
 
     static_path     = os.path.dirname(__file__)+'/../web/static'
@@ -58,7 +61,7 @@ class Webserver(threading.Thread):
                   "clients"       : self.clients,
                   "dispatcher"    : self.dispatcher
                }),
-      (r'/', IndexHandler),
+      (r'/', IndexHandler, {"output": output}),
     ],
     static_path   = static_path,
     template_path = template_path,

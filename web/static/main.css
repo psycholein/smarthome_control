@@ -1,0 +1,22 @@
+body * {
+  font-family: arial;
+}
+
+paper-tab {
+  font-size: 20px;
+}
+
+#climate ul {
+  list-style: none;
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+
+#climate ul li {
+  font-size: 16px;
+}
+
+#climate ul li label {
+  display: inline-block;
+  width: 110px;
+}

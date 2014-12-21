@@ -2,10 +2,29 @@
 
 {% block content %}
 
-  <paper-tabs selected="0">
-    <paper-tab>Main</paper-tab>
-    <paper-tab>Learning</paper-tab>
-    <paper-tab>Config</paper-tab>
-  </paper-tabs>
+  <template is="auto-binding">
+    <paper-tabs selected="{% raw '{{ view }}' %}">
+      <paper-tab>Temperaturen</paper-tab>
+      <paper-tab>Learning</paper-tab>
+      <paper-tab>Config</paper-tab>
+    </paper-tabs>
+
+    <core-pages selected="{% raw '{{ view }}' %}">
+      <div id="climate">
+        <ul>
+          {% set items = output.getValues() %}
+          {% for key in items %}
+            <li>
+              <label>{{ items.get(key).get('room') }}:</label>
+              <span class="temperature">{{ items.get(key).get('temperature') }}°C,</span>
+              <span class="humidity">{{ items.get(key).get('humidity') }}%</span>
+            </li>
+          {% end %}
+        </ul>
+      </div>
+      <div>Learning</div>
+      <div>Config</div>
+    </core-pages>
+  </template>
 
 {% end %}

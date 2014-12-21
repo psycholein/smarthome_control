@@ -2,6 +2,7 @@ import time
 from libs.pilight import PilightClient
 from libs.hue import Hue
 from libs.webserver import Webserver
+from classes.output import Output
 
 class App:
 
@@ -9,10 +10,17 @@ class App:
     self.hue = Hue('192.168.0.206')
     self.hue.start()
     self.pilight = PilightClient()
-    self.pilight.registerCallback(self.callback)
+    self.pilight.registerCallback(self.switchCallback)
+    self.pilight.registerCallback(self.climateCallback, 'protocol', ['threechan'])
     self.pilight.start()
 
-    self.webserver = Webserver()
+    self.output = Output()
+    self.output.addRoom(1433, 'Arbeitszimmer')
+    self.output.addRoom(1463, 'Schlafzimmer')
+    self.output.addRoom(1324, 'Kinderzimmer')
+    self.output.addRoom(1351, 'Bad')
+
+    self.webserver = Webserver(self.output)
     self.webserver.start()
 
     self.serve()
@@ -33,7 +41,16 @@ class App:
         self.pilight.stop()
         self.hue.stop()
 
-  def callback(self, data):
+  def climateCallback(self, data):
+    code = data.get('code', None)
+    if not code: return
+
+    temp = float(code.get('temperature')) / 10
+    humi = float(code.get('humidity')) / 10
+
+    self.output.addClimate(code.get('id'), temp, humi)
+
+  def switchCallback(self, data):
     code = data.get('code', None)
     if not code: return
 
@@ -95,7 +112,7 @@ class App:
         if code.get('state', '') == 'up' :
           self.hue.do({'light': 4, 'cmd': 'xy', 'val': self.hue.RGB2CIE(0,255,0)})
         if code.get('state', '') == 'down' :
-          self.hue.do({'light': 4, 'cmd': 'xy', 'val': self.hue.RGB2CIE(255,255,255)})
+          self.hue.do({'light': 4, 'cmd': 'xy', 'val': self.hue.RGB2CIE(255,255,0)})
 
 def main():
   App()

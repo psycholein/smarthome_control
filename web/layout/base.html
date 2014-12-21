@@ -6,17 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SmartHome</title>
 
-    {% set path = '../static/bower_components/' %}
+    <link rel="stylesheet" href="/static/main.css" type="text/css" />
 
+    {% set path = '../static/bower_components/' %}
     <script src="{{path}}webcomponentsjs/webcomponents.min.js"></script>
     <link rel="import" href="{{path}}polymer/polymer.html">
-    <link rel="import" href="{{path}}core-header-panel/core-header-panel.html">
-    <link rel="import" href="{{path}}core-toolbar/core-toolbar.html">
     <link rel="import" href="{{path}}paper-tabs/paper-tabs.html">
+    <link rel="import" href="{{path}}core-pages/core-pages.html">
   </head>
   <body unresolved>
     <div id="content">
       {% block content %}{% end %}
     </div>
+    <script type="text/javascript" src="/static/app.js"></script>
   </body>
 </html>

@@ -44,8 +44,8 @@ class PilightClient(threading.Thread):
             break
     return responses.values()
 
-  def registerCallback(self, callback, states = ['up', 'down']):
-    self.callbacks.append({'func': callback, 'states': states})
+  def registerCallback(self, callback, key = 'protocol', values = ['arctech_screen']):
+    self.callbacks.append({'func': callback, 'key': key, 'values': values})
 
   def removeCallback(self, callback):
     for key,val in self.callbacks:
@@ -70,7 +70,7 @@ class PilightClient(threading.Thread):
     return True
 
   def doCallbackIf(self, callback, data):
-    if data.get('code', {}).get('state') in callback.get('states', []):
+    if data.get(callback.get('key', '_')) in callback.get('values', []):
       if self.checkRepeatStatus(data):
         self.saveData(data)
         func = callback.get('func', None)
