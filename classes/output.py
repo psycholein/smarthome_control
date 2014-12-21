@@ -5,10 +5,11 @@ class Output:
 
   def addClimate(self, uid, temperature, humidity):
     if not self.rooms.has_key(uid): return
-    self.climate[uid] = {
+    room = self.rooms.get(uid)
+    self.climate[room] = {
       'temperature': temperature,
       'humidity':    humidity,
-      'room':        self.rooms.get(uid)
+      'room':        room
     }
 
   def addRoom(self, uid, name):
