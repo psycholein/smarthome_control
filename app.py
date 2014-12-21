@@ -9,6 +9,7 @@ class App:
   def __init__(self):
     self.hue = Hue('192.168.0.206')
     self.hue.start()
+
     self.pilight = PilightClient()
     self.pilight.registerCallback(self.switchCallback)
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['threechan'])
@@ -22,7 +23,6 @@ class App:
 
     self.webserver = Webserver(self.output)
     self.webserver.start()
-
     self.serve()
 
   def serve(self):
@@ -47,7 +47,6 @@ class App:
 
     temp = float(code.get('temperature')) / 10
     humi = float(code.get('humidity')) / 10
-
     self.output.addClimate(code.get('id'), temp, humi)
 
   def switchCallback(self, data):
@@ -55,7 +54,7 @@ class App:
     if not code: return
 
     # TODO config
-
+    # Wohnzimmer Lichtschalter
     if code.get('id', -1) == 13583562:
       if code.get('unit', -1) == 10:
         if code.get('state', '') == 'down':
@@ -70,6 +69,7 @@ class App:
         if code.get('state', '') == 'up' :
           self.hue.do({'light': 3, 'cmd': 'bri', 'val': 127})
 
+    # Wohnzimmer Fernbedienung
     if code.get('id', -1) == 13184550:
       if code.get('all', -1) == 1:
         self.hue.do({'light': [1,2,3,5], 'cmd': 'on', 'val': False})
@@ -90,7 +90,7 @@ class App:
           self.hue.do({'light': 5, 'cmd': 'on', 'val': False})
 
 
-    # Schlafzimmer
+    # Schlafzimmer 2 Fernbedienungen
     if code.get('id', -1) == 13205286 or code.get('id', -1) == 13205202:
       if code.get('all', -1) == 1:
         self.hue.do({'light': [4], 'cmd': 'on', 'val': False})
