@@ -1,5 +1,8 @@
-SmartHome Control with pilight 433MHz Receiver / Transmitter, FHEM, Philips Hue, 866MHz Stick and Raspberry Pi
+Smarthome Control
 ===========
+
+SmartHome Control with pilight 433MHz Receiver / Transmitter, FHEM, Philips Hue, 866MHz Stick and Raspberry Pi
+
 
 433MHz Receiver / Transmitter:<br/>
 http://www.ebay.de/itm/3400RF-433Mhz-Superheterodyne-Transmitter-and-Receiver-Module-Link-Kit-Arduino-/381048465724
