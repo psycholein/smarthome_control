@@ -25,18 +25,10 @@ class App:
     self.fhem = Fhem(config.getFhemIp(), config.getFhemPort(), self.dispatcher)
     self.fhem.start()
 
-    self.output = Output()
     sensors = config.getSensors()
     for room in sensors:
       sensor = sensors[room]
-      self.output.addRoom(sensor.get('clima'), room)
-
-    # self.output.addRoom(1433, 'Arbeitszimmer')
-    # self.output.addRoom(1463, 'Schlafzimmer')
-    # self.output.addRoom(1324, 'Kinderzimmer')
-    # self.output.addRoom(1351, 'Badezimmer')
-    # self.output.addRoom(1453, 'Wohnzimmer')
-    # self.output.addRoom(1354, 'Kueche')
+      Output.addRoom(sensor.get('clima'), room)
 
     self.events = Events(self.dispatcher)
     self.events.start()
@@ -48,7 +40,7 @@ class App:
     self.dispatcher.addDispatchObject(self.events)
     self.dispatcher.start()
 
-    self.webserver = Webserver(self.output, self.dispatcher)
+    self.webserver = Webserver(self.dispatcher)
     self.webserver.start()
     self.serve()
 
@@ -71,9 +63,11 @@ class App:
     code = data.get('code', None)
     if not code: return
 
-    temp = float(code.get('temperature')) / 10
-    humi = float(code.get('humidity')) / 10
-    self.output.addClimate(code.get('id'), temp, humi)
+    temperature = float(code.get('temperature')) / 10
+    humidity    = float(code.get('humidity')) / 10
+
+    Output.addValue(code.get('id'), 'temperature', temperature)
+    Output.addValue(code.get('id'), 'humidity', humidity)
 
   def switchCallback(self, data):
     code = data.get('code', None)

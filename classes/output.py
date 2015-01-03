@@ -1,19 +1,18 @@
 class Output:
-  def __init__(self):
-    self.climate = {}
-    self.rooms   = {}
+  climate = {}
+  rooms   = {}
 
-  def addClimate(self, uid, temperature, humidity):
-    if not self.rooms.has_key(uid): return
-    room = self.rooms.get(uid)
-    self.climate[room] = {
-      'temperature': temperature,
-      'humidity':    humidity,
-      'room':        room
-    }
+  @staticmethod
+  def addValue(uid, typ, value):
+    if not Output.rooms.has_key(uid): return
+    room = Output.rooms.get(uid)
+    if not Output.climate.get(room, None): Output.climate[room] = {'room': room}
+    Output.climate[room][typ] = value
 
-  def addRoom(self, uid, name):
-    self.rooms[uid] = name
+  @staticmethod
+  def addRoom(uid, name):
+    Output.rooms[uid] = name
 
-  def getValues(self):
-    return self.climate
+  @staticmethod
+  def getValues():
+    return Output.climate
