@@ -1,14 +1,16 @@
 class Routes:
-  routes = {}
+
+  def __init__(self):
+    self.routes = []
 
   def addRoute(self, path, obj, method):
-    Routes.routes[hash(path)] = {
+    self.routes.append({
       'path':   path,
       'object': obj,
       'method': method
-    }
-    pass
+    })
 
   def findRoute(self, path):
-    if Routes.routes.has_key(hash(path)): Routes.routes[path]
+    for route in self.routes:
+      pass
     return None
