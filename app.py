@@ -1,36 +1,60 @@
 import time
 from libs.pilight import PilightClient
 from libs.hue import Hue
+from libs.fhem import Fhem
+from classes.config import Config
 from classes.webserver import Webserver
 from classes.output import Output
 from classes.dispatcher import Dispatcher
+from classes.events import Events
 
 class App:
 
   def __init__(self):
-    self.hue = Hue('192.168.0.206')
+    config = Config()
+    self.dispatcher = Dispatcher(config.routes())
+
+    self.hue = Hue(config.getHueIP(), self.dispatcher)
     self.hue.start()
 
-    self.pilight = PilightClient()
+    self.pilight = PilightClient(self.dispatcher)
     self.pilight.registerCallback(self.switchCallback)
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['threechan'])
     self.pilight.start()
 
-    self.output = Output()
-    self.output.addRoom(1433, 'Arbeitszimmer')
-    self.output.addRoom(1463, 'Schlafzimmer')
-    self.output.addRoom(1324, 'Kinderzimmer')
-    self.output.addRoom(1351, 'Badezimmer')
-    self.output.addRoom(1453, 'Wohnzimmer')
-    self.output.addRoom(1354, 'Kueche')
+    self.fhem = Fhem(config.getFhemIp(), config.getFhemPort(), self.dispatcher)
+    self.fhem.start()
 
-    self.webserver = Webserver(self.output)
+    self.output = Output()
+    sensors = config.getSensors()
+    for room in sensors:
+      sensor = sensors[room]
+      self.output.addRoom(sensor.get('clima'), room)
+
+    # self.output.addRoom(1433, 'Arbeitszimmer')
+    # self.output.addRoom(1463, 'Schlafzimmer')
+    # self.output.addRoom(1324, 'Kinderzimmer')
+    # self.output.addRoom(1351, 'Badezimmer')
+    # self.output.addRoom(1453, 'Wohnzimmer')
+    # self.output.addRoom(1354, 'Kueche')
+
+    self.events = Events(self.dispatcher)
+    self.events.start()
+
+    self.dispatcher.addDispatchObject(self)
+    self.dispatcher.addDispatchObject(self.hue)
+    self.dispatcher.addDispatchObject(self.pilight)
+    self.dispatcher.addDispatchObject(self.fhem)
+    self.dispatcher.addDispatchObject(self.events)
+    self.dispatcher.start()
+
+    self.webserver = Webserver(self.output, self.dispatcher)
     self.webserver.start()
     self.serve()
 
   def serve(self):
     print "started!\n"
-    threads = [self.hue, self.pilight]
+    threads = [self.hue, self.pilight, self.fhem, self.events, self.dispatcher]
     while True:
       try:
         run = False
@@ -41,8 +65,7 @@ class App:
           self.webserver.stop()
           return
       except KeyboardInterrupt:
-        self.pilight.stop()
-        self.hue.stop()
+        for thread in threads: thread.stop()
 
   def climateCallback(self, data):
     code = data.get('code', None)

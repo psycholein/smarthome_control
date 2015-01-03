@@ -1,26 +1,23 @@
 import threading, thread
 import classes.routes as Routes
-import classes.cronjobs as cronjobs
 
 class Dispatcher(threading.Thread):
-  def __init__(self):
+  def __init__(self, routes = None):
     super(self.__class__, self).__init__()
+    self.routes   = routes
     self.commands = []
     self.running  = False
     self.process  = threading.Event()
     self.work     = threading.Event()
     self.objects  = {}
 
-    self.routes   = Routes()
-    self.cronjobs = Cronjobs()
-
-  def addDispatchObj(self, obj):
+  def addDispatchObject(self, obj):
     self.objects[hash(obj)] = obj
 
   def run(self):
     self.running = True
     while self._dispatch():
-      self.process.wait(1)
+      self.process.wait()
 
   def stop(self):
     self.running = False
@@ -30,19 +27,10 @@ class Dispatcher(threading.Thread):
     while len(self.commands) > 0 and self.running:
       self.work.wait()
       command = self.commands.pop()
-      # dispatch
+      # dispatch / routes
 
-    self.checkCronjobs()
     self.process.clear()
     return self.running
-
-  def checkCronjobs(self):
-    command = self.cronjobs.checkCronjobs()
-    if command:
-      self.work.clear()
-      self.commands.insert(0, command)
-      self.work.set()
-      self.process.set()
 
   def send(self, command, client):
     self.work.clear()

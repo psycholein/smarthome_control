@@ -3,14 +3,15 @@ from phue import Bridge
 
 class Hue(threading.Thread):
 
-  def __init__(self, ip):
+  def __init__(self, ip, dispatcher = None):
     threading.Thread.__init__(self)
     self.bridge = Bridge(ip)
     self.bridge.connect()
 
-    self.process  = threading.Event()
-    self.running  = True
-    self.commands = []
+    self.dispatcher = dispatcher
+    self.process    = threading.Event()
+    self.running    = True
+    self.commands   = []
 
   def run(self):
     while self._dispatch():

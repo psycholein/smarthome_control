@@ -11,10 +11,11 @@ class PilightClient(threading.Thread):
 
   repeat_period = 10
 
-  def __init__(self):
+  def __init__(self, dispatcher = None):
     threading.Thread.__init__(self)
-    self.callbacks = []
-    self.lastData  = {}
+    self.dispatcher = dispatcher
+    self.callbacks  = []
+    self.lastData   = {}
 
   def discover(self, service, timeout=2, retries=1):
     group = ("239.255.255.250", 1900)
