@@ -1,8 +1,9 @@
 import time
 from libs.pilight import PilightClient
 from libs.hue import Hue
-from libs.webserver import Webserver
+from classes.webserver import Webserver
 from classes.output import Output
+from classes.dispatcher import Dispatcher
 
 class App:
 

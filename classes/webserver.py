@@ -18,7 +18,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
   def open(self, *args):
     self.clients.add(self)
-    self.dispatcher.client_connected(self)
+    if self.dispatcher: self.dispatcher.clientConnected(self)
     self.stream.set_nodelay(True)
 
   def on_message(self, message):
@@ -26,7 +26,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
   def on_close(self):
     self.clients.remove(self)
-    self.dispatcher.client_disconnected(self)
+    if self.dispatcher: self.dispatcher.clientDisconnected(self)
 
 
 class Clients:
@@ -65,7 +65,7 @@ class Webserver(threading.Thread):
     ],
     static_path   = static_path,
     template_path = template_path,
-    autoreload    = True)
+    autoreload    = False)
 
   def run(self):
     self.running = True
