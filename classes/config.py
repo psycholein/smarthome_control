@@ -21,15 +21,15 @@ class Config:
     return {
       'Arbeitszimmer': {
         'clima': 1433,
-        'heat': None
+        'heat': 'CUL_HM_HM_CC_RT_DN_319E0E'
       },
       'Schlafzimmer': {
         'clima': 1463,
-        'heat': None
+        'heat': 'CUL_HM_HM_CC_RT_DN_319DFF'
       },
       'Kinderzimmer': {
         'clima': 1324,
-        'heat': None
+        'heat': 'CUL_HM_HM_CC_RT_DN_2E2CBF'
       },
       'Badezimmer': {
         'clima': 1351,
@@ -37,7 +37,7 @@ class Config:
       },
       'Wohnzimmer': {
         'clima': 1453,
-        'heat': None
+        'heat': 'CUL_HM_HM_CC_RT_DN_319DF0'
       },
       'Kueche': {
         'clima': 1354,

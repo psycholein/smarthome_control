@@ -1,6 +1,8 @@
 import threading
 import requests
 
+from classes.values import Values
+
 class Fhem(threading.Thread):
 
   prefix = "/fhem"
@@ -11,6 +13,8 @@ class Fhem(threading.Thread):
     threading.Thread.__init__(self)
     self.api        = "http://%s:%s%s" % (ip, port, self.prefix)
     self.dispatcher = dispatcher
+    self.devices    = []
+    self.callbacks  = []
     self.work       = threading.Event()
 
   def run(self):
@@ -22,6 +26,21 @@ class Fhem(threading.Thread):
     self.running = False
     self.work.set()
 
+  def addDevice(self, device):
+    if device: self.devices.append(device)
+
+  def registerCallback(self, callback):
+    self.callbacks.append(callback)
+
+  def removeCallback(self, callback):
+    self.callbacks.remove(callback)
+
+  def triggerCallbacks(self, data):
+    for callback in self.callbacks: callback(data)
+
+  def attributes(self):
+    return ['desired-temp', 'measured-temp']
+
   def getData(self):
     if not self.running: return self.running
 
@@ -29,16 +48,24 @@ class Fhem(threading.Thread):
     request = requests.get(self.api + self.json)
     if request.status_code != requests.codes.ok: return self.running
 
-    data = None
+    results = None
     try:
-      data = request.json()
+      results = request.json()
     except:
-      data = None
-    if not data: return self.running
+      pass
 
-    self.analyzeData(data)
-
+    if results: self.analyzeResults(results)
     return self.running
 
-  def analyzeData(self, data):
-    pass
+  def analyzeResults(self, results):
+    for result in results.get('Results', []):
+      name = result.get('name', None)
+      if name in self.devices:
+        data     = {'uid': name}
+        readings = result.get('Readings')
+        if not readings: continue
+        for attr in self.attributes:
+          value = readings.get(attr, None)
+          if value: data[attr] = value.strip()
+        for callback in self.callbacks
+          callback(data)

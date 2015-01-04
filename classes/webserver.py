@@ -3,7 +3,7 @@ import tornado.web
 import tornado.websocket
 import threading, os
 
-from classes.output import Output
+from classes.values import Values
 
 class IndexHandler(tornado.web.RequestHandler):
   def initialize(self, output):
@@ -63,7 +63,7 @@ class Webserver(threading.Thread):
                   "clients"       : self.clients,
                   "dispatcher"    : self.dispatcher
                }),
-      (r'/', IndexHandler, {"output": Output}),
+      (r'/', IndexHandler, {"output": Values}),
     ],
     static_path   = static_path,
     template_path = template_path,

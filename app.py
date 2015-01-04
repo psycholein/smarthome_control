@@ -4,7 +4,7 @@ from libs.hue import Hue
 from libs.fhem import Fhem
 from classes.config import Config
 from classes.webserver import Webserver
-from classes.output import Output
+from classes.values import Values
 from classes.dispatcher import Dispatcher
 from classes.events import Events
 
@@ -14,9 +14,6 @@ class App:
     config = Config()
     self.dispatcher = Dispatcher(config.routes())
 
-    self.fhem = Fhem(config.getFhemIp(), config.getFhemPort(), self.dispatcher)
-    self.fhem.start()
-
     self.hue = Hue(config.getHueIP(), self.dispatcher)
     self.hue.start()
 
@@ -25,10 +22,18 @@ class App:
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['threechan'])
     self.pilight.start()
 
+    self.fhem = Fhem(config.getFhemIp(), config.getFhemPort(), self.dispatcher)
+
     sensors = config.getSensors()
     for room in sensors:
       sensor = sensors[room]
-      Output.addRoom(sensor.get('clima'), room)
+      Values.addRoom(sensor.get('clima'), room)
+      if sensor.get('heat'):
+        heat = sensor.get('heat')+'_Clima'
+        Values.addRoom(heat, room)
+        self.fhem.addDevice(heat)
+
+    self.fhem.start()
 
     self.events = Events(self.dispatcher)
     self.events.start()
@@ -66,8 +71,8 @@ class App:
     temperature = float(code.get('temperature')) / 10
     humidity    = float(code.get('humidity')) / 10
 
-    Output.addValue(code.get('id'), 'temperature', temperature)
-    Output.addValue(code.get('id'), 'humidity', humidity)
+    Values.addValue(code.get('id'), 'temperature', temperature)
+    Values.addValue(code.get('id'), 'humidity', humidity)
 
   def switchCallback(self, data):
     code = data.get('code', None)
