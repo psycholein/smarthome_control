@@ -14,6 +14,9 @@ class App:
     config = Config()
     self.dispatcher = Dispatcher(config.routes())
 
+    self.fhem = Fhem(config.getFhemIp(), config.getFhemPort(), self.dispatcher)
+    self.fhem.start()
+
     self.hue = Hue(config.getHueIP(), self.dispatcher)
     self.hue.start()
 
@@ -21,9 +24,6 @@ class App:
     self.pilight.registerCallback(self.switchCallback)
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['threechan'])
     self.pilight.start()
-
-    self.fhem = Fhem(config.getFhemIp(), config.getFhemPort(), self.dispatcher)
-    self.fhem.start()
 
     sensors = config.getSensors()
     for room in sensors:

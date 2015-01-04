@@ -16,8 +16,8 @@
           {% for key in sorted(items) %}
             <li>
               <label>{{ items.get(key).get('room') }}:</label>
-              <span class="temperature">{{ items.get(key).get('temperature') }}°C,</span>
-              <span class="humidity">{{ items.get(key).get('humidity') }}%</span>
+              <span class="temperature">{{ items.get(key).get('temperature','') }}°C,</span>
+              <span class="humidity">{{ items.get(key).get('humidity','') }}%</span>
             </li>
           {% end %}
         </ul>

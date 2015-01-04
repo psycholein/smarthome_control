@@ -8,7 +8,7 @@ class Config:
   def fhemData(self):
     return {
       'ip':   '127.0.0.1',
-      'port': '3000'
+      'port': '8083'
     }
 
   def getFhemIp(self):
