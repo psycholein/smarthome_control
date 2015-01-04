@@ -11,10 +11,10 @@ from classes.events import Events
 class App:
 
   def __init__(self):
-    config = Config()
-    self.dispatcher = Dispatcher(config.routes())
+    self.config = Config()
+    self.dispatcher = Dispatcher(self.config.routes())
 
-    self.hue = Hue(config.getHueIP(), self.dispatcher)
+    self.hue = Hue(self.config.getHueIP(), self.dispatcher)
     self.hue.start()
 
     self.pilight = PilightClient(self.dispatcher)
@@ -22,9 +22,11 @@ class App:
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['threechan'])
     self.pilight.start()
 
-    self.fhem = Fhem(config.getFhemIp(), config.getFhemPort(), self.dispatcher)
+    self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
+    for attr in self.config.fhemAttr(): self.fhem.addAttribute(attr)
+    self.fhem.registerCallback(self.fhemCallback)
 
-    sensors = config.getSensors()
+    sensors = self.config.getSensors()
     for room in sensors:
       sensor = sensors[room]
       Values.addRoom(sensor.get('clima'), room)
@@ -63,6 +65,14 @@ class App:
           return
       except KeyboardInterrupt:
         for thread in threads: thread.stop()
+
+  def fhemCallback(self, data):
+    print data
+    for attr in self.config.fhemAttr():
+      value = data.get(attr, None)
+      if value:
+        Values.addValue(data.get('id'), attr, value)
+        Values.addValue(data.get('id'), 'heat', True)
 
   def climateCallback(self, data):
     code = data.get('code', None)

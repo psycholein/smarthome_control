@@ -11,6 +11,9 @@ class Config:
       'port': '8083'
     }
 
+  def fhemAttr(self):
+    return ['desired-temp', 'measured-temp']
+
   def getFhemIp(self):
     return self.fhemData().get('ip')
 

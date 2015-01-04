@@ -15,6 +15,7 @@ class Fhem(threading.Thread):
     self.dispatcher = dispatcher
     self.devices    = []
     self.callbacks  = []
+    self.attributes = []
     self.work       = threading.Event()
 
   def run(self):
@@ -29,6 +30,9 @@ class Fhem(threading.Thread):
   def addDevice(self, device):
     if device: self.devices.append(device)
 
+  def addAttribute(self, attr):
+    self.attributes.append(attr)
+
   def registerCallback(self, callback):
     self.callbacks.append(callback)
 
@@ -37,9 +41,6 @@ class Fhem(threading.Thread):
 
   def triggerCallbacks(self, data):
     for callback in self.callbacks: callback(data)
-
-  def attributes(self):
-    return ['desired-temp', 'measured-temp']
 
   def getData(self):
     if not self.running: return self.running
@@ -59,13 +60,12 @@ class Fhem(threading.Thread):
 
   def analyzeResults(self, results):
     for result in results.get('Results', []):
-      name = result.get('name', None)
+      name = result.get('Name', None)
       if name in self.devices:
-        data     = {'uid': name}
+        data     = {'id': name}
         readings = result.get('Readings')
         if not readings: continue
         for attr in self.attributes:
           value = readings.get(attr, None)
-          if value: data[attr] = value.strip()
-        for callback in self.callbacks
-          callback(data)
+          if value: data[attr] = value.get('Value').strip()
+        for callback in self.callbacks: callback(data)

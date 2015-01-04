@@ -12,11 +12,11 @@ paper-tab {
   padding: 0;
 }
 
-#climate ul li {
+#climate ul > li {
   font-size: 16px;
+  padding: 0 0 8px 0;
 }
 
-#climate ul li label {
-  display: inline-block;
-  width: 110px;
+#climate ul > li ol {
+  list-style: disc;
 }

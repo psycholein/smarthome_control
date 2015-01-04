@@ -16,8 +16,21 @@
           {% for key in sorted(items) %}
             <li>
               <label>{{ items.get(key).get('room') }}:</label>
-              <span class="temperature">{{ items.get(key).get('temperature','') }}°C,</span>
-              <span class="humidity">{{ items.get(key).get('humidity','') }}%</span>
+              <ol>
+                <li>
+                  Sensor:
+                  <span class="temperature">{{ items.get(key).get('temperature','') }}°C,</span>
+                  <span class="humidity">{{ items.get(key).get('humidity','') }}%</span>
+                </li>
+                {% if items.get(key).get('heat', False) %}
+                  <li>
+                    Heizung:
+                    <span class="temperature">{{ items.get(key).get('measured-temp','') }}°C</span>
+                    <span>/</span>
+                    <span class="temperature">{{ items.get(key).get('desired-temp','') }}°C</span>
+                  </li>
+                {% end %}
+              </ol>
             </li>
           {% end %}
         </ul>
