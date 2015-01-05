@@ -1,5 +1,4 @@
 import threading, thread
-import classes.routes as Routes
 
 class Dispatcher(threading.Thread):
   def __init__(self, routes = None):
@@ -27,7 +26,9 @@ class Dispatcher(threading.Thread):
     while len(self.commands) > 0 and self.running:
       self.work.wait()
       command = self.commands.pop()
-      # dispatch / routes
+      obj = self.routes.findRoute(command)
+      if obj:
+        pass
 
     self.process.clear()
     return self.running
