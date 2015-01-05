@@ -26,11 +26,10 @@ class Dispatcher(threading.Thread):
     while len(self.commands) > 0 and self.running:
       self.work.wait()
       command = self.commands.pop()
-      route = self.routes.findRoute(command)
+      route   = self.routes.findRoute(command)
       if route and self.objects.has_key(route.get('class')):
         obj = self.objects.get(route.get('class'))
         getattr(obj, route.get('method'))(route.get('values'))
-        print "Send command"
 
     self.process.clear()
     return self.running
