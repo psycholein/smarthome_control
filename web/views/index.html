@@ -14,7 +14,7 @@
         <ul>
           {% set items = output.getValues() %}
           {% for key in sorted(items) %}
-            <li>
+            <li class="{{ items.get(key).get('room') }}">
               <label>{{ items.get(key).get('room') }}:</label>
               <ol>
                 <li>
@@ -25,9 +25,9 @@
                 {% if items.get(key).get('heat', False) %}
                   <li>
                     Heizung:
-                    <span class="temperature">{{ items.get(key).get('measured-temp','') }}°C</span>
+                    <span class="measured-temp">{{ items.get(key).get('measured-temp','') }}°C</span>
                     <span>/</span>
-                    <span class="temperature">{{ items.get(key).get('desired-temp','') }}°C</span>
+                    <span class="desired-temp">{{ items.get(key).get('desired-temp','') }}°C</span>
                   </li>
                 {% end %}
               </ol>

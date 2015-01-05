@@ -7,7 +7,7 @@ class Fhem(threading.Thread):
 
   prefix = "/fhem"
   json   = "?cmd=jsonlist2&XHR=1"
-  temp   = "?room={room}&dev.{device}={device}&arg.{device}=desired-temp&val.{device}=25&cmd.{device}=set"
+  temp   = "?dev.{device}={device}&arg.{device}=desired-temp&val.{device}=25&cmd.{device}=set&XHR=1"
 
   def __init__(self, ip, port, dispatcher = None):
     threading.Thread.__init__(self)
