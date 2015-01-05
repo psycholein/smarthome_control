@@ -1,11 +1,24 @@
 var App = {
   setup: function() {
-    App.init();
+    document.querySelector("template").view = 0;
     App.network.connect();
+
+    $(window).bind('polymer-ready', App.init);
   },
 
   init: function() {
-    document.querySelector("template").view = 0;
+    $('body').on('change', '[data-route][data-event="change"]', App.sendData);
+  },
+
+  sendData: function(e) {
+    var data = {
+      'path': $(this).data('route'),
+      'values': {
+        'device': $(this).attr('name'),
+        'value': $(this).val()
+      }
+    };
+    App.network.send(JSON.stringify(data));
   },
 
   config: {

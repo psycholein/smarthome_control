@@ -49,6 +49,6 @@ class Config:
     }
 
   def routes(self):
-    self.routes = Routes()
-    # add route
-    return self.routes
+    routes = Routes()
+    routes.addRoute('setDesiredTemp', 'Fhem', 'setDesiredTemp')
+    return routes

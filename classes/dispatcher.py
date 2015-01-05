@@ -11,7 +11,7 @@ class Dispatcher(threading.Thread):
     self.objects  = {}
 
   def addDispatchObject(self, obj):
-    self.objects[hash(obj)] = obj
+    self.objects[obj.__class__.__name__] = obj
 
   def run(self):
     self.running = True
@@ -26,9 +26,11 @@ class Dispatcher(threading.Thread):
     while len(self.commands) > 0 and self.running:
       self.work.wait()
       command = self.commands.pop()
-      obj = self.routes.findRoute(command)
-      if obj:
-        pass
+      route = self.routes.findRoute(command)
+      if route and self.objects.has_key(route.get('class')):
+        obj = self.objects.get(route.get('class'))
+        getattr(obj, route.get('method'))(route.get('values'))
+        print "Send command"
 
     self.process.clear()
     return self.running

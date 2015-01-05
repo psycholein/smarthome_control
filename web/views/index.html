@@ -14,20 +14,31 @@
         <ul>
           {% set items = output.getValues() %}
           {% for key in sorted(items) %}
-            <li class="{{ items.get(key).get('room') }}">
-              <label>{{ items.get(key).get('room') }}:</label>
+            {% set item = items.get(key) %}
+            <li class="{{ item.get('room') }}">
+              <label>{{ item.get('room') }}:</label>
               <ol>
                 <li>
                   Sensor:
-                  <span class="temperature">{{ items.get(key).get('temperature','') }}°C,</span>
-                  <span class="humidity">{{ items.get(key).get('humidity','') }}%</span>
+                  <span class="temperature">{{ item.get('temperature','') }}°C,</span>
+                  <span class="humidity">{{ item.get('humidity','') }}%</span>
                 </li>
-                {% if items.get(key).get('heat', False) %}
+                {% if item.get('device', False) %}
                   <li>
                     Heizung:
-                    <span class="measured-temp">{{ items.get(key).get('measured-temp','') }}°C</span>
+                    <span class="measured-temp">{{ item.get('measured-temp','') }}°C</span>
                     <span>/</span>
-                    <span class="desired-temp">{{ items.get(key).get('desired-temp','') }}°C</span>
+                    <span>
+                      <select class="desired-temp" name="{{ item.get('device') }}" data-route="setDesiredTemp" data-event="change">
+                        {% for i in range(30) %}
+                          {% set temp = i * 0.5 + 15 %}
+                          {% set desired = item.get('desired-temp','') %}
+                          <option value="{{ temp }}" {% if str(desired) == str(temp) %}selected="selected"{% end %}>
+                            {{ temp }}°C
+                          </option>
+                        {% end %}
+                      </select>
+                    </span>
                   </li>
                 {% end %}
               </ol>

@@ -7,7 +7,7 @@ class Fhem(threading.Thread):
 
   prefix = "/fhem"
   json   = "?cmd=jsonlist2&XHR=1"
-  temp   = "?dev.{device}={device}&arg.{device}=desired-temp&val.{device}=25&cmd.{device}=set&XHR=1"
+  temp   = "?dev.{device}={device}&arg.{device}=desired-temp&val.{device}={value}&cmd.{device}=set&XHR=1"
 
   def __init__(self, ip, port, dispatcher = None):
     threading.Thread.__init__(self)
@@ -69,3 +69,12 @@ class Fhem(threading.Thread):
           value = readings.get(attr, None)
           if value: data[attr] = value.get('Value').strip()
         for callback in self.callbacks: callback(data)
+
+  def setDesiredTemp(self, values):
+    device = values.get('device')
+    value  = values.get('value')
+
+    if not device or not value: return
+
+    request = requests.get(self.api + self.temp.format(device=device, value=value))
+    if request.status_code != requests.codes.ok: pass

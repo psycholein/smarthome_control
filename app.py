@@ -72,7 +72,7 @@ class App:
       value = data.get(attr, None)
       if value:
         Values.addValue(data.get('id'), attr, value)
-        Values.addValue(data.get('id'), 'heat', True)
+        Values.addValue(data.get('id'), 'device', data.get('id'))
 
   def climateCallback(self, data):
     code = data.get('code', None)
