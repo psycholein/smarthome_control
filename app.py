@@ -68,12 +68,14 @@ class App:
       except KeyboardInterrupt:
         for thread in threads: thread.stop()
       finally:
-        data = {
-          'params': ['path', 'values'],
-          'path':   'outputToJs',
-          'values': Values.getValues()
-        }
-        self.dispatcher.send(data)
+        if Values.changed:
+          data = {
+            'params': ['path', 'values'],
+            'path':   'outputToJs',
+            'values': Values.getValues()
+          }
+          Values.changed = False
+          self.dispatcher.send(data)
 
   def fhemCallback(self, data):
     print data
@@ -85,7 +87,7 @@ class App:
           if value.find('set_desired-temp') != -1:
             desired = value.replace('set_desired-temp','').strip()
             Values.addValue(uid, 'desired-temp', desired)
-            Values.addValue(uid, 'info', 'Set %s (%s)' %(desired, data.get('desired-temp')))
+            Values.addValue(uid, 'info', 'Set to %s&deg;C (Current: %s&deg;C)' %(desired, data.get('desired-temp')))
           else:
             Values.addValue(uid, 'info', '')
         else:

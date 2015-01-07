@@ -28,7 +28,7 @@ var App = {
         if ($(selector).prop("tagName") == 'SELECT')
           $(selector).val(value);
         else
-          $(selector).text(value);
+          $(selector).html(value);
       });
     });
   },
@@ -63,11 +63,13 @@ var App = {
   network: {
     ws: null,
     connect: function() {
-      App.network.ws           = new WebSocket(App.config.ws);
-      App.network.ws.onopen    = App.events.connected;
-      App.network.ws.onclose   = App.events.disconnected;
-      App.network.ws.onmessage = App.events.message;
-      App.network.ws.onerror   = App.events.error;
+      try {
+        App.network.ws           = new WebSocket(App.config.ws);
+        App.network.ws.onopen    = App.events.connected;
+        App.network.ws.onclose   = App.events.disconnected;
+        App.network.ws.onmessage = App.events.message;
+        App.network.ws.onerror   = App.events.error;
+      } catch (e) {}
     },
     reconnect: function() {
       setTimeout(function() {
