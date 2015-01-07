@@ -47,6 +47,7 @@ var App = {
     connected: function(event) {
     },
     disconnected: function(event) {
+      App.network.reconnect();
     },
     message: function(event) {
       try {
@@ -55,8 +56,7 @@ var App = {
       } catch (e) {}
     },
     error: function(event) {
-      console.log(event, 'error');
-      // event.data
+      App.network.reconnect();
     }
   },
 
@@ -69,13 +69,31 @@ var App = {
       App.network.ws.onmessage = App.events.message;
       App.network.ws.onerror   = App.events.error;
     },
+    reconnect: function() {
+      setTimeout(function() {
+        App.network.connect();
+      }, 5000);
+    },
+    checkAndReconnect: function() {
+      setInterval(function(){
+        if (!App.network.ws || App.network.ws.readyState != WebSocket.OPEN)
+          App.network.connect();
+      }, 60000);
+    },
     disconnect: function() {
       App.network.ws.close();
       App.network.ws = null;
     },
     send: function(message) {
-      if (message && App.network.ws)
+      if (message && App.network.ws && App.network.ws.readyState == WebSocket.OPEN) {
         App.network.ws.send(message);
+      } else {
+        App.network.connect();
+        var msg = message;
+        setTimeout(function() {
+          App.network.send(msg);
+        }, 2000);
+      }
     }
   }
 };
