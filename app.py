@@ -1,4 +1,4 @@
-import time
+import time, json
 from libs.pilight import PilightClient
 from libs.hue import Hue
 from libs.fhem import Fhem
@@ -40,15 +40,17 @@ class App:
     self.events = Events(self.dispatcher)
     self.events.start()
 
+    self.webserver = Webserver(self.dispatcher)
+    self.webserver.start()
+
     self.dispatcher.addDispatchObject(self)
     self.dispatcher.addDispatchObject(self.hue)
     self.dispatcher.addDispatchObject(self.pilight)
     self.dispatcher.addDispatchObject(self.fhem)
     self.dispatcher.addDispatchObject(self.events)
+    self.dispatcher.addDispatchObject(self.webserver)
     self.dispatcher.start()
 
-    self.webserver = Webserver(self.dispatcher)
-    self.webserver.start()
     self.serve()
 
   def serve(self):
@@ -65,14 +67,27 @@ class App:
           return
       except KeyboardInterrupt:
         for thread in threads: thread.stop()
+      finally:
+        data = {
+          'params': ['path', 'values'],
+          'path':   'outputToJs',
+          'values': Values.getValues()
+        }
+        self.dispatcher.send(data)
 
   def fhemCallback(self, data):
     print data
     for attr in self.config.fhemAttr():
       value = data.get(attr, None)
       if value:
-        Values.addValue(data.get('id'), attr, value)
-        Values.addValue(data.get('id'), 'device', data.get('id'))
+        if attr == 'state':
+          if value.find('set_desired-temp') != -1:
+            Values.addValue(data.get('id'), 'info', value)
+          else:
+            Values.addValue(data.get('id'), 'info', '')
+        else:
+          Values.addValue(data.get('id'), attr, value)
+          Values.addValue(data.get('id'), 'device', data.get('id'))
 
   def climateCallback(self, data):
     code = data.get('code', None)

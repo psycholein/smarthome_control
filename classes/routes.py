@@ -13,14 +13,19 @@ class Routes:
     })
 
   def findRoute(self, data):
-    print "find route"
-    try:
-      data = json.loads(data)
-    except:
-      return None
+    if not type(data) is dict:
+      try:
+        data = json.loads(data)
+      except:
+        return None
 
     for route in self.routes:
       if data.get('path') == route.get('path'):
-        route['values'] = data.get('values')
+        route['params'] = {}
+        if data.get('params', None):
+          for param in data.get('params'):
+            route['params'][param] = data.get(param)
+        else:
+          route['params'] = data.get('values')
         return route
     return None

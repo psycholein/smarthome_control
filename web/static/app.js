@@ -12,13 +12,31 @@ var App = {
 
   sendData: function(e) {
     var data = {
-      'path': $(this).data('route'),
+      'path':   $(this).data('route'),
       'values': {
         'device': $(this).attr('name'),
         'value': $(this).val()
       }
     };
     App.network.send(JSON.stringify(data));
+  },
+
+  updateData: function(data) {
+    $.each(data, function(room, values){
+      $.each(values, function(key, value){
+        var selector = '[data-room="'+room+'"] .'+key;
+        if ($(selector).prop("tagName") == 'SELECT')
+          $(selector).val(value);
+        else
+          $(selector).text(value);
+      });
+    });
+  },
+
+  routes: function(data) {
+    switch (data.path) {
+      case 'outputToJs': return App.updateData(data.values);
+    }
   },
 
   config: {
@@ -31,9 +49,13 @@ var App = {
     disconnected: function(event) {
     },
     message: function(event) {
-      // event.data
+      try {
+        data = JSON.parse(event.data);
+        App.routes(data);
+      } catch (e) {}
     },
     error: function(event) {
+      console.log(event, 'error');
       // event.data
     }
   },

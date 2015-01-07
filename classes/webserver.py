@@ -1,7 +1,5 @@
-import tornado.ioloop
-import tornado.web
-import tornado.websocket
-import threading, os
+import tornado.ioloop, tornado.web, tornado.websocket
+import threading, os, json
 
 from classes.values import Values
 
@@ -87,6 +85,7 @@ class Webserver(threading.Thread):
   def send(self, data):
     if not self.running: return
 
+    if not type(data) is str: data = json.dumps(data)
     for client in self.clients.get():
       client.write_message(data)
 

@@ -29,12 +29,12 @@ class Dispatcher(threading.Thread):
       route   = self.routes.findRoute(command)
       if route and self.objects.has_key(route.get('class')):
         obj = self.objects.get(route.get('class'))
-        getattr(obj, route.get('method'))(route.get('values'))
+        getattr(obj, route.get('method'))(route.get('params'))
 
     self.process.clear()
     return self.running
 
-  def send(self, command, client):
+  def send(self, command, client = None):
     self.work.clear()
     self.commands.insert(0, command)
     self.work.set()

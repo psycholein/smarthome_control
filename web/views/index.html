@@ -4,50 +4,17 @@
 
   <template is="auto-binding">
     <paper-tabs selected="{% raw '{{ view }}' %}">
-      <paper-tab>Temperaturen</paper-tab>
-      <paper-tab>Learning</paper-tab>
+      <paper-tab>Data</paper-tab>
+      <paper-tab>Events</paper-tab>
       <paper-tab>Config</paper-tab>
     </paper-tabs>
 
     <core-pages selected="{% raw '{{ view }}' %}">
-      <div id="climate">
-        <ul>
-          {% set items = output.getValues() %}
-          {% for key in sorted(items) %}
-            {% set item = items.get(key) %}
-            <li class="{{ item.get('room') }}">
-              <label>{{ item.get('room') }}:</label>
-              <ol>
-                <li>
-                  Sensor:
-                  <span class="temperature">{{ item.get('temperature','') }}°C,</span>
-                  <span class="humidity">{{ item.get('humidity','') }}%</span>
-                </li>
-                {% if item.get('device', False) %}
-                  <li>
-                    Heizung:
-                    <span class="measured-temp">{{ item.get('measured-temp','') }}°C</span>
-                    <span>/</span>
-                    <span>
-                      <select class="desired-temp" name="{{ item.get('device') }}" data-route="setDesiredTemp" data-event="change">
-                        {% for i in range(30) %}
-                          {% set temp = i * 0.5 + 15 %}
-                          {% set desired = item.get('desired-temp','') %}
-                          <option value="{{ temp }}" {% if str(desired) == str(temp) %}selected="selected"{% end %}>
-                            {{ temp }}°C
-                          </option>
-                        {% end %}
-                      </select>
-                    </span>
-                  </li>
-                {% end %}
-              </ol>
-            </li>
-          {% end %}
-        </ul>
+      <div id="data">
+        {% include "data.html" %}
       </div>
-      <div>Learning</div>
-      <div>Config</div>
+      <div id="events">Events</div>
+      <div id="config">Config</div>
     </core-pages>
   </template>
 

@@ -1,11 +1,4 @@
-import socket
-import httplib
-import StringIO
-import struct
-import re
-import threading
-import select
-import json
+import socket, httplib, StringIO, struct, re, threading, select, json
 
 class PilightClient(threading.Thread):
 

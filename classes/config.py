@@ -12,7 +12,7 @@ class Config:
     }
 
   def fhemAttr(self):
-    return ['desired-temp', 'measured-temp']
+    return ['desired-temp', 'measured-temp', 'state']
 
   def getFhemIp(self):
     return self.fhemData().get('ip')
@@ -51,4 +51,5 @@ class Config:
   def routes(self):
     routes = Routes()
     routes.addRoute('setDesiredTemp', 'Fhem', 'setDesiredTemp')
+    routes.addRoute('outputToJs', 'Webserver', 'send')
     return routes

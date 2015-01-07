@@ -1,5 +1,4 @@
-import threading
-import requests
+import threading, requests
 
 from classes.values import Values
 
@@ -77,4 +76,5 @@ class Fhem(threading.Thread):
     if not device or not value: return
 
     request = requests.get(self.api + self.temp.format(device=device, value=value))
-    if request.status_code != requests.codes.ok: pass
+    if request.status_code != requests.codes.ok: return
+    self.work.set()
