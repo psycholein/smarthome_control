@@ -77,17 +77,20 @@ class App:
 
   def fhemCallback(self, data):
     print data
+    uid = data.get('id')
     for attr in self.config.fhemAttr():
       value = data.get(attr, None)
       if value:
         if attr == 'state':
           if value.find('set_desired-temp') != -1:
-            Values.addValue(data.get('id'), 'info', value)
+            desired = value.replace('set_desired-temp','').strip()
+            Values.addValue(uid, 'desired-temp', desired)
+            Values.addValue(uid, 'info', 'Set %s (%s)' %(desired, data.get('desired-temp')))
           else:
-            Values.addValue(data.get('id'), 'info', '')
+            Values.addValue(uid, 'info', '')
         else:
-          Values.addValue(data.get('id'), attr, value)
-          Values.addValue(data.get('id'), 'device', data.get('id'))
+          Values.addValue(uid, attr, value)
+          Values.addValue(uid, 'device', uid)
 
   def climateCallback(self, data):
     code = data.get('code', None)
