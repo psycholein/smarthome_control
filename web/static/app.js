@@ -63,6 +63,7 @@ var App = {
   network: {
     ws: null,
     connect: function() {
+      if (App.network.ws && App.network.ws.readyState == WebSocket.OPEN) return;
       try {
         App.network.ws           = new WebSocket(App.config.ws);
         App.network.ws.onopen    = App.events.connected;
@@ -80,7 +81,7 @@ var App = {
       setInterval(function(){
         if (!App.network.ws || App.network.ws.readyState != WebSocket.OPEN)
           App.network.connect();
-      }, 60000);
+      }, 5000);
     },
     disconnect: function() {
       App.network.ws.close();
