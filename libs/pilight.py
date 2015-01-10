@@ -66,7 +66,7 @@ class PilightClient(threading.Thread):
     if data.get(callback.get('key', '_')) in callback.get('values', []):
       if self.checkRepeatStatus(data):
         self.saveData(data)
-        func = callback.get('func', None)
+        func = callback.get('func')
         if func: func(data)
 
   def checkCallbacks(self, data):

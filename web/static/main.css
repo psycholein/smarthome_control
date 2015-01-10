@@ -7,6 +7,7 @@ paper-tab {
 }
 
 #data ul {
+  font-size: 16px;
   list-style: none;
   margin: 10px 0 0 0;
   padding: 0;
@@ -19,4 +20,10 @@ paper-tab {
 
 #data ul > li ol {
   list-style: disc;
+  padding-left: 25px;
+  font-size: 15px;
+}
+
+#data ul > li ol li small {
+  font-size: 12px;
 }

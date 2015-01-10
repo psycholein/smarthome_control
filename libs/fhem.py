@@ -59,13 +59,13 @@ class Fhem(threading.Thread):
 
   def analyzeResults(self, results):
     for result in results.get('Results', []):
-      name = result.get('Name', None)
+      name = result.get('Name')
       if name in self.devices:
         data     = {'id': name}
         readings = result.get('Readings')
         if not readings: continue
         for attr in self.attributes:
-          value = readings.get(attr, None)
+          value = readings.get(attr)
           if value: data[attr] = value.get('Value').strip()
         for callback in self.callbacks: callback(data)
 

@@ -26,9 +26,11 @@ var App = {
       $.each(values, function(key, value){
         var selector = '[data-room="'+room+'"] .'+key;
         if ($(selector).prop("tagName") == 'SELECT')
-          $(selector).val(value);
+          $(selector).val(value.value);
         else
-          $(selector).html(value);
+          $(selector).html(value.value);
+        selector = '[data-room="'+room+'"] .'+key+'_date';
+        $(selector).html(value.date);
       });
     });
   },

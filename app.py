@@ -81,7 +81,7 @@ class App:
     print data
     uid = data.get('id')
     for attr in self.config.fhemAttr():
-      value = data.get(attr, None)
+      value = data.get(attr)
       if value:
         if attr == 'state':
           if value.find('set_desired-temp') != -1:
@@ -95,7 +95,7 @@ class App:
           Values.addValue(uid, 'device', uid)
 
   def climateCallback(self, data):
-    code = data.get('code', None)
+    code = data.get('code')
     if not code: return
 
     temperature = float(code.get('temperature')) / 10
@@ -105,7 +105,7 @@ class App:
     Values.addValue(code.get('id'), 'humidity', humidity)
 
   def switchCallback(self, data):
-    code = data.get('code', None)
+    code = data.get('code')
     if not code: return
 
     # TODO config

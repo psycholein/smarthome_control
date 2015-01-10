@@ -22,7 +22,7 @@ class Routes:
     for route in self.routes:
       if data.get('path') == route.get('path'):
         route['params'] = {}
-        if data.get('params', None):
+        if data.get('params'):
           for param in data.get('params'):
             route['params'][param] = data.get(param)
         else:
