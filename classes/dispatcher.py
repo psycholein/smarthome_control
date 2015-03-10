@@ -10,8 +10,9 @@ class Dispatcher(threading.Thread):
     self.work     = threading.Event()
     self.objects  = {}
 
-  def addDispatchObject(self, obj):
-    self.objects[obj.__class__.__name__] = obj
+  def addDispatchObject(self, *objs):
+    for obj in objs:
+      self.objects[obj.__class__.__name__] = obj
 
   def run(self):
     self.running = True

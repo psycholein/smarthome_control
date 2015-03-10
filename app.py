@@ -48,12 +48,8 @@ class App:
     self.webserver = Webserver(self.dispatcher)
     self.webserver.start()
 
-    self.dispatcher.addDispatchObject(self)
-    self.dispatcher.addDispatchObject(self.hue)
-    self.dispatcher.addDispatchObject(self.pilight)
-    self.dispatcher.addDispatchObject(self.fhem)
-    self.dispatcher.addDispatchObject(self.events)
-    self.dispatcher.addDispatchObject(self.webserver)
+    self.dispatcher.addDispatchObject(
+      self, self.hue, self.pilight, self.fhem, self.events, self.webserver)
     self.dispatcher.start()
 
     self.serve()
