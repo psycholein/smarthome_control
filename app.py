@@ -1,4 +1,4 @@
-import time, json
+import time, json, os, sys, signal
 from libs.pilight import PilightClient
 from libs.hue import Hue
 from libs.fhem import Fhem
@@ -10,7 +10,12 @@ from classes.events import Events
 
 class App:
 
+  pidfile = "/tmp/smarthome.pid"
+
   def __init__(self):
+    print "starting smarthome..."
+    self.setPid()
+
     self.config = Config()
     self.dispatcher = Dispatcher(self.config.routes())
 
@@ -52,6 +57,22 @@ class App:
     self.dispatcher.start()
 
     self.serve()
+
+    self.clearPid()
+
+  def setPid(self):
+    pid = str(os.getpid())
+    if os.path.isfile(self.pidfile):
+      try:
+        os.kill(int(file(self.pidfile,'r').readlines()[0]), 15)
+      except:
+        pass
+      else:
+        time.sleep(5)
+    file(self.pidfile, 'w').write(pid)
+
+  def clearPid(self):
+    os.unlink(self.pidfile)
 
   def serve(self):
     print "started!\n"
