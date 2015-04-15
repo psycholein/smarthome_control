@@ -24,7 +24,7 @@ class App:
 
     self.pilight = PilightClient(self.dispatcher)
     self.pilight.registerCallback(self.switchCallback)
-    self.pilight.registerCallback(self.climateCallback, 'protocol', ['threechan'])
+    self.pilight.registerCallback(self.climateCallback, 'protocol', ['alecto_ws1700'])
     self.pilight.start()
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
@@ -60,7 +60,7 @@ class App:
     pid = str(os.getpid())
     if os.path.isfile(self.pidfile):
       try:
-        os.kill(int(file(self.pidfile,'r').readlines()[0]), 15)
+        os.kill(int(file(self.pidfile,'r').readlines()[0]), 9)
       except:
         pass
       else:
@@ -112,17 +112,17 @@ class App:
           Values.addValue(uid, 'device', uid)
 
   def climateCallback(self, data):
-    code = data.get('code')
+    code = data.get('message')
     if not code: return
 
-    temperature = float(code.get('temperature')) / 10
-    humidity    = float(code.get('humidity')) / 10
+    temperature = code.get('temperature')
+    humidity    = code.get('humidity')
 
-    Values.addValue(code.get('id'), 'temperature', temperature)
-    Values.addValue(code.get('id'), 'humidity', humidity)
+    if temperature: Values.addValue(code.get('id'), 'temperature', temperature)
+    if humidity: Values.addValue(code.get('id'), 'humidity', humidity)
 
   def switchCallback(self, data):
-    code = data.get('code')
+    code = data.get('message')
     if not code: return
 
     # TODO config

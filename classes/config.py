@@ -43,7 +43,7 @@ class Config:
         'heat': 'CUL_HM_HM_CC_RT_DN_319DF0'
       },
       'Kueche': {
-        'clima': 1354,
+        'clima': 1366,
         'heat': None
       }
     }

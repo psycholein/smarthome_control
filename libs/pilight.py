@@ -99,17 +99,18 @@ class PilightClient(threading.Thread):
       s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       s.connect((location, int(port)))
       s.settimeout(None)
-      s.send('{"message":"client receiver"}\n')
+      s.send('{"action":"identify","options":{"receiver":1}}\n')
       data = ""
       while True:
+	if self.stopped: return
         ready = select.select([s], [], [], 10)
         if not ready[0]: return
         line = s.recv(1024)
-        data += line
+	data += line
         if "\n\n" in line[-2:]:
           data = data[:-2]
           break
-      if data == '{"message":"accept client"}':
+      if data == '{"status":"success"}':
         data = ""
         while True:
           if self.stopped: return
