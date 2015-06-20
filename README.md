@@ -9,7 +9,7 @@ http://www.ebay.de/itm/3400RF-433Mhz-Superheterodyne-Transmitter-and-Receiver-Mo
 
 Install Receiver / Transmitter:<br>
 http://wiki.pilight.org/doku.php/electronics<br>
-Use low pass filter to save cpu: http://wiki.pilight.org/doku.php/low-pass_filter
+Use low pass filter to save cpu power: http://wiki.pilight.org/doku.php/low-pass_filter
 
 Service:<br/>
 http://www.pilight.org/
