@@ -26,3 +26,5 @@ http://fhem.de/fhem.html<br/>
 
 TODO:
 Service for Commands
+
+sudo pilight-send -p elro_800_switch -s 21 -u 1 (-f / -t)
