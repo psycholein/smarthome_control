@@ -23,7 +23,7 @@ class Config:
   def getSensors(self):
     return {
       'Arbeitszimmer': {
-        'clima': 1433,
+        'clima': 1504,
         'heat': 'CUL_HM_HM_CC_RT_DN_319E0E'
       },
       'Schlafzimmer': {
@@ -39,12 +39,15 @@ class Config:
         'heat': None
       },
       'Wohnzimmer': {
-        'clima': 1453,
+        'clima': 1532,
         'heat': 'CUL_HM_HM_CC_RT_DN_319DF0'
       },
       'Kueche': {
         'clima': 1366,
         'heat': None
+      },
+      'Balkon': {
+        'clima': 1486
       }
     }
 
