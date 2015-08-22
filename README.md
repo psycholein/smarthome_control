@@ -8,7 +8,8 @@ SmartHome Control with pilight 433MHz Receiver / Transmitter, FHEM, Philips Hue,
 http://www.ebay.de/itm/3400RF-433Mhz-Superheterodyne-Transmitter-and-Receiver-Module-Link-Kit-Arduino-/381048465724
 
 Install Receiver / Transmitter:<br>
-http://wiki.pilight.org/doku.php/electronics
+http://wiki.pilight.org/doku.php/electronics<br>
+Use low pass filter to save cpu power: http://wiki.pilight.org/doku.php/low-pass_filter
 
 Service:<br/>
 http://www.pilight.org/
@@ -26,3 +27,5 @@ http://fhem.de/fhem.html<br/>
 
 TODO:
 Service for Commands
+
+sudo pilight-send -p elro_800_switch -s 21 -u 1 (-f / -t)
