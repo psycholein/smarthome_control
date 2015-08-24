@@ -144,7 +144,7 @@ class App:
     # Wohnzimmer Fernbedienung
     if code.get('id', -1) == 13184550:
       if code.get('all', -1) == 1:
-        self.hue.do({'light': [1,2,3,5], 'cmd': 'on', 'val': False})
+        self.hue.do({'light': [1,2,3,4], 'cmd': 'on', 'val': False})
       if code.get('unit', -1) == 0:
         if code.get('state', '') == 'up' :
           self.hue.do({'light': [1,2], 'cmd': 'on', 'val': True})
@@ -157,9 +157,9 @@ class App:
           self.hue.do({'light': 3, 'cmd': 'on', 'val': False})
       if code.get('unit', -1) == 2:
         if code.get('state', '') == 'up' :
-          self.hue.do({'light': 5, 'cmd': 'on', 'val': True})
+          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
         if code.get('state', '') == 'down' :
-          self.hue.do({'light': 5, 'cmd': 'on', 'val': False})
+          self.hue.do({'light': 4, 'cmd': 'on', 'val': False})
 
 
     # Schlafzimmer 2 Fernbedienungen
