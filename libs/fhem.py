@@ -45,7 +45,11 @@ class Fhem(threading.Thread):
     if not self.running: return self.running
 
     self.work.clear()
-    request = requests.get(self.api + self.json)
+    try:
+      request = requests.get(self.api + self.json)
+    except:
+      return self.running
+
     if request.status_code != requests.codes.ok: return self.running
 
     results = None
