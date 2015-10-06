@@ -27,19 +27,19 @@ class Config:
         'heat': 'CUL_HM_HM_CC_RT_DN_319E0E'
       },
       'Schlafzimmer': {
-        'clima': 1463,
+        'clima': 1313,
         'heat': 'CUL_HM_HM_CC_RT_DN_319DFF'
       },
       'Kinderzimmer': {
-        'clima': 1324,
+        'clima': 1309,
         'heat': 'CUL_HM_HM_CC_RT_DN_2E2CBF'
       },
       'Badezimmer': {
-        'clima': 1351,
+        'clima': 1330,
         'heat': None
       },
       'Wohnzimmer': {
-        'clima': 1532,
+        'clima': 1478,
         'heat': 'CUL_HM_HM_CC_RT_DN_319DF0'
       },
       'Kueche': {
