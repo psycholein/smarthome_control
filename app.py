@@ -2,6 +2,7 @@ import time, json, os, sys, signal
 from libs.pilight import PilightClient
 from libs.hue import Hue
 from libs.fhem import Fhem
+from libs.lcd import Lcd
 from classes.config import Config
 from classes.webserver import Webserver
 from classes.values import Values
@@ -26,6 +27,9 @@ class App:
     self.pilight.registerCallback(self.switchCallback)
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['alecto_ws1700'])
     self.pilight.start()
+
+    self.lcd = Lcd()
+    self.start()
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
     for attr in self.config.fhemAttr(): self.fhem.addAttribute(attr)
@@ -72,7 +76,7 @@ class App:
 
   def serve(self):
     print "started!\n"
-    threads = [self.hue, self.pilight, self.fhem, self.events, self.dispatcher]
+    threads = [self.hue, self.pilight, self.fhem, self.events, self.dispatcher, self.lcd]
     while True:
       try:
         run = False
