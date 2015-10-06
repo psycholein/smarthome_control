@@ -2,7 +2,7 @@ import i2c_lib
 from time import *
 
 # LCD Address
-ADDRESS = 0x3F
+ADDRESS = 0x27
 
 # commands
 LCD_CLEARDISPLAY = 0x01

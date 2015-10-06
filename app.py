@@ -29,7 +29,7 @@ class App:
     self.pilight.start()
 
     self.lcd = Lcd()
-    self.start()
+    self.lcd.start()
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
     for attr in self.config.fhemAttr(): self.fhem.addAttribute(attr)
