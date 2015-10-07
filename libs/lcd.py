@@ -16,7 +16,7 @@ class Lcd(threading.Thread):
     self.running = True
     while self.running:
       values = copy.deepcopy(Values.getValues())
-      for val in values:
+      for val in sorted(values):
         self.showData(values.get(val))
         self.work.wait(10)
         if not self.running: return

@@ -1,1 +1,1 @@
-nohup python app.py >& /dev/null &
+nohup sudo python app.py >& /dev/null &
