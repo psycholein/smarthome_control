@@ -1,0 +1,39 @@
+climate:
+  attr:
+    - 'desired-temp'
+    - 'measured-temp'
+    - 'state'
+  devices:
+    -
+      room: 'Arbeitszimmer'
+      clima: '1504'
+      heat: 'CUL_HM_HM_CC_RT_DN_319E0E'
+    -
+      room: 'Schlafzimmer'
+      clima: '1313'
+      heat: 'CUL_HM_HM_CC_RT_DN_319DFF'
+    -
+      room: 'Kinderzimmer'
+      clima: '1309'
+      heat: 'CUL_HM_HM_CC_RT_DN_2E2CBF'
+    -
+      room: 'Badezimmer'
+      clima: '1330'
+    -
+      room: 'Wohnzimmer'
+      clima: '1478'
+      heat: 'CUL_HM_HM_CC_RT_DN_319DF0'
+    -
+      room: 'Kueche'
+      clima: '1366'
+    -
+      room: 'Balkon'
+      clima: '1486'
+
+energy:
+  attr:
+    - 'state'
+  devices:
+    -
+      name: Steckdose1
+      device: 'CUL_HM_HM_ES_PMSw1_Pl_32889A_Sw'

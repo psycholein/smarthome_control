@@ -7,6 +7,7 @@ class Fhem(threading.Thread):
   prefix = "/fhem"
   json   = "?cmd=jsonlist2&XHR=1"
   temp   = "?dev.{device}={device}&arg.{device}=desired-temp&val.{device}={value}&cmd.{device}=set&XHR=1"
+  energy = "?cmd.{device}=set%20{device}%20{value}&XHR=1"
 
   def __init__(self, ip, port, dispatcher = None):
     threading.Thread.__init__(self)
@@ -14,7 +15,6 @@ class Fhem(threading.Thread):
     self.dispatcher = dispatcher
     self.devices    = []
     self.callbacks  = []
-    self.attributes = []
     self.work       = threading.Event()
 
   def run(self):
@@ -26,11 +26,8 @@ class Fhem(threading.Thread):
     self.running = False
     self.work.set()
 
-  def addDevice(self, device):
-    if device: self.devices.append(device)
-
-  def addAttribute(self, attr):
-    self.attributes.append(attr)
+  def addDevice(self, name, values):
+    if name and values: self.devices.append({'name': name, 'values': values})
 
   def registerCallback(self, callback):
     self.callbacks.append(callback)
@@ -61,14 +58,20 @@ class Fhem(threading.Thread):
     if results: self.analyzeResults(results)
     return self.running
 
+  def isDevice(self, name):
+    for device in self.devices:
+      if name == device.get('name'): return device
+    return None
+
   def analyzeResults(self, results):
     for result in results.get('Results', []):
       name = result.get('Name')
-      if name in self.devices:
-        data     = {'id': name}
+      device = self.isDevice(name)
+      if device:
+        data     = {'id': name, 'values': device.get('values')}
         readings = result.get('Readings')
         if not readings: continue
-        for attr in self.attributes:
+        for attr in device.get('value').get('attr'):
           value = readings.get(attr)
           if value: data[attr] = value.get('Value').strip()
         for callback in self.callbacks: callback(data)
@@ -80,5 +83,15 @@ class Fhem(threading.Thread):
     if not device or not value: return
 
     request = requests.get(self.api + self.temp.format(device=device, value=value))
+    if request.status_code != requests.codes.ok: return
+    self.work.set()
+
+  def setEnergy(self, values):
+    device = values.get('device')
+    value  = values.get('value')
+
+    if not device or not value: return
+
+    request = requests.get(self.api + self.energy.format(device=device, value=value))
     if request.status_code != requests.codes.ok: return
     self.work.set()

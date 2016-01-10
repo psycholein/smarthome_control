@@ -1,18 +1,19 @@
+import yaml
 from classes.routes import Routes
 
 class Config:
 
+  def __init__(self):
+    self.base = yaml.load(file('config/base.yml', 'r'))
+    self.devices = yaml.load(file('config/devices.yml', 'r'))
+
+    print self.devices
+
   def getHueIP(self):
-    return '192.168.0.206'
+    return self.base.get('hue')
 
   def fhemData(self):
-    return {
-      'ip':   '127.0.0.1',
-      'port': '8083'
-    }
-
-  def fhemAttr(self):
-    return ['desired-temp', 'measured-temp', 'state']
+    return self.base.get('fhem')
 
   def getFhemIp(self):
     return self.fhemData().get('ip')
@@ -20,39 +21,24 @@ class Config:
   def getFhemPort(self):
     return self.fhemData().get('port')
 
-  def getSensors(self):
-    return {
-      'Arbeitszimmer': {
-        'clima': 1504,
-        'heat': 'CUL_HM_HM_CC_RT_DN_319E0E'
-      },
-      'Schlafzimmer': {
-        'clima': 1313,
-        'heat': 'CUL_HM_HM_CC_RT_DN_319DFF'
-      },
-      'Kinderzimmer': {
-        'clima': 1309,
-        'heat': 'CUL_HM_HM_CC_RT_DN_2E2CBF'
-      },
-      'Badezimmer': {
-        'clima': 1330,
-        'heat': None
-      },
-      'Wohnzimmer': {
-        'clima': 1478,
-        'heat': 'CUL_HM_HM_CC_RT_DN_319DF0'
-      },
-      'Kueche': {
-        'clima': 1366,
-        'heat': None
-      },
-      'Balkon': {
-        'clima': 1486
-      }
-    }
+  def getClimates(self):
+    return self.devices.get('climate').get('devices')
+
+  def getClimateValues(self):
+    return {'attr': self.devices.get('climate').get('attr'),
+            'type': 'climate', 'config': self.getClimates()}
+
+  def getEnergies(self):
+    return self.devices.get('energy').get('devices')
+
+  def getEnergyValues(self):
+    return {'attr': self.devices.get('energy').get('attr'),
+            'type': 'energy', 'config': self.getEnergies()}
+
 
   def routes(self):
     routes = Routes()
     routes.addRoute('setDesiredTemp', 'Fhem', 'setDesiredTemp')
+    routes.addRoute('setEnergy', 'Fhem', 'setEnergy')
     routes.addRoute('outputToJs', 'Webserver', 'send')
     return routes

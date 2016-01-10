@@ -28,21 +28,25 @@ class App:
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['alecto_ws1700'])
     self.pilight.start()
 
-    self.lcd = Lcd()
-    self.lcd.start()
+    #self.lcd = Lcd()
+    #self.lcd.start()
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
-    for attr in self.config.fhemAttr(): self.fhem.addAttribute(attr)
     self.fhem.registerCallback(self.fhemCallback)
 
-    sensors = self.config.getSensors()
-    for room in sensors:
-      sensor = sensors[room]
-      Values.addRoom(sensor.get('clima'), room)
-      if sensor.get('heat'):
-        heat = sensor.get('heat')+'_Clima'
-        Values.addRoom(heat, room)
-        self.fhem.addDevice(heat)
+    climates = self.config.getClimates()
+    for climate in climates:
+      Values.addRoom(climate.get('clima'), climate.get('room'))
+      if climate.get('heat'):
+        heat = climate.get('heat')+'_Clima'
+        Values.addRoom(heat, climate.get('room'))
+        self.fhem.addDevice(heat, self.config.getClimateValues())
+
+    energies = self.config.getEnergies()
+    for energy in energies:
+      self.fhem.addDevice(energy.get('device'), self.config.getEnergyValues())
+
+    return
 
     self.fhem.start()
 
@@ -68,7 +72,7 @@ class App:
       except:
         pass
       else:
-        time.sleep(5)
+        time.sleep(2)
     file(self.pidfile, 'w').write(pid)
 
   def clearPid(self):
@@ -101,7 +105,7 @@ class App:
   def fhemCallback(self, data):
     print data
     uid = data.get('id')
-    for attr in self.config.fhemAttr():
+    for attr in data.get('values').get('attr'):
       value = data.get(attr)
       if value:
         if attr == 'state':
