@@ -71,7 +71,7 @@ class Fhem(threading.Thread):
         data     = {'id': name, 'values': device.get('values')}
         readings = result.get('Readings')
         if not readings: continue
-        for attr in device.get('value').get('attr'):
+        for attr in device.get('values').get('attr'):
           value = readings.get(attr)
           if value: data[attr] = value.get('Value').strip()
         for callback in self.callbacks: callback(data)

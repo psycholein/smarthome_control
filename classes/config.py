@@ -7,8 +7,6 @@ class Config:
     self.base = yaml.load(file('config/base.yml', 'r'))
     self.devices = yaml.load(file('config/devices.yml', 'r'))
 
-    print self.devices
-
   def getHueIP(self):
     return self.base.get('hue')
 
