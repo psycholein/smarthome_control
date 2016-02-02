@@ -25,3 +25,7 @@ class Values:
   @staticmethod
   def getValues():
     return Values.data
+
+  @staticmethod
+  def getCollectionValues(collection):
+    return Values.data.get(collection, {})

@@ -1,4 +1,4 @@
-import threading, thread
+import threading, thread, datetime
 
 class Events(threading.Thread):
   def __init__(self, dispatcher = None):
@@ -7,27 +7,47 @@ class Events(threading.Thread):
     self.running    = False
     self.events     = []
     self.work       = threading.Event()
+    self.time       = 0
+    self.week       = []
 
-  def addEvent(self, typ, command, values):
+  def addEvent(self, typ, data):
     self.events.append({
         'typ':     typ,
-        'command': command,
-        'value':   value,
+        'data':   data,
         'status':  None
       })
 
   def run(self):
     self.running = True
     while self.check():
-      self.work.wait(60)
+      self.work.wait(30)
+
+  def defineValues(self):
+    time = datetime.datetime.today()
+    self.time = float("%d.%d" % (time.hour, time.minute))
+    self.week = ['Mo-So']
+    if time.weekday() < 5:
+      self.week.append('Mo-Fr')
+    else:
+      self.week.append('Sa-So')
 
   def check(self):
+    self.defineValues()
+    for event in self.events:
+      if event['typ'] == 'climate': self.checkClimate(event)
+      if self.running == false: return self.running
     self.work.clear()
     return self.running
+
+  def checkClimate(self, event):
+    data = event['data']
+    if not data.week in self.week: return
+    if float(data['from']) < self.time or float(data['to']) >= self.time: return
+    pass
 
   def stop(self):
     self.running = False
     self.work.set()
 
-  def trigger(self, typ, command, values):
+  def trigger(self, typ, values):
     pass
