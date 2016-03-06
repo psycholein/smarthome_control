@@ -18,6 +18,8 @@ class App:
     self.setPid()
 
     self.config = Config()
+    self.values = Values()
+
     self.dispatcher = Dispatcher(self.config.routes())
 
     self.hue = Hue(self.config.getHueIP(), self.dispatcher)
@@ -36,19 +38,19 @@ class App:
 
     climates = self.config.getClimates()
     for climate in climates:
-      Values.addCollection(climate.get('clima'), climate.get('room'))
-      Values.addValue(climate.get('clima'), 'type', 'climate')
+      self.values.addCollection(climate.get('clima'), climate.get('room'))
+      self.values.addValue(climate.get('clima'), 'type', 'climate')
       if climate.get('heat'):
         heat = climate.get('heat')+'_Clima'
-        Values.addCollection(heat, climate.get('room'))
-        Values.addValue(heat, 'type', 'climate')
+        self.values.addCollection(heat, climate.get('room'))
+        self.values.addValue(heat, 'type', 'climate')
         self.fhem.addDevice(heat, self.config.getClimateValues())
 
     energies = self.config.getEnergies()
     for energy in energies:
       device = energy.get('device')
-      Values.addCollection(device, energy.get('name'))
-      Values.addValue(device, 'type', 'energy')
+      self.values.addCollection(device, energy.get('name'))
+      self.values.addValue(device, 'type', 'energy')
       self.fhem.addDevice(device, self.config.getEnergyValues())
 
     self.fhem.start()
@@ -56,7 +58,7 @@ class App:
     self.events = Events(self.dispatcher)
     self.events.start()
 
-    self.webserver = Webserver(self.dispatcher)
+    self.webserver = Webserver(self.values, self.dispatcher)
     self.webserver.start()
 
     self.dispatcher.addDispatchObject(
@@ -88,6 +90,7 @@ class App:
       try:
         run = False
         for thread in threads:
+          self.sendChanges()
           thread.join(1)
           if thread.isAlive(): run = True
         if not run:
@@ -95,15 +98,16 @@ class App:
           return
       except KeyboardInterrupt:
         for thread in threads: thread.stop()
-      finally:
-        if Values.changed:
-          data = {
-            'params': ['path', 'values'],
-            'path':   'outputToJs',
-            'values': Values.getValues()
-          }
-          Values.changed = False
-          self.dispatcher.send(data)
+
+  def sendChanges(self):
+    if self.values.changed:
+      data = {
+        'params': ['path', 'values'],
+        'path':   'outputToJs',
+        'values': self.values.getValues()
+      }
+      self.values.changed = False
+      self.dispatcher.send(data)
 
   def fhemCallback(self, data):
     uid = data.get('id')
@@ -113,13 +117,13 @@ class App:
         if attr == 'state' and data.get('values').get('type') == 'climate':
           if value.find('set_desired-temp') != -1:
             desired = value.replace('set_desired-temp','').strip()
-            Values.addValue(uid, 'desired-temp', desired)
-            Values.addValue(uid, 'info', 'Set to %s&deg;C (Current: %s&deg;C)' %(desired, data.get('desired-temp')))
+            self.values.addValue(uid, 'desired-temp', desired)
+            self.values.addValue(uid, 'info', 'Set to %s&deg;C (Current: %s&deg;C)' %(desired, data.get('desired-temp')))
           else:
-            Values.addValue(uid, 'info', '')
+            self.values.addValue(uid, 'info', '')
         else:
-          Values.addValue(uid, attr, value)
-          Values.addValue(uid, 'device', uid)
+          self.values.addValue(uid, attr, value)
+          self.values.addValue(uid, 'device', uid)
 
   def climateCallback(self, data):
     code = data.get('message')
@@ -128,8 +132,8 @@ class App:
     temperature = code.get('temperature')
     humidity    = code.get('humidity')
 
-    if temperature: Values.addValue(code.get('id'), 'temperature', temperature)
-    if humidity: Values.addValue(code.get('id'), 'humidity', humidity)
+    if temperature: self.values.addValue(code.get('id'), 'temperature', temperature)
+    if humidity: self.values.addValue(code.get('id'), 'humidity', humidity)
 
   def switchCallback(self, data):
     code = data.get('message')

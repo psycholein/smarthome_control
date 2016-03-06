@@ -47,12 +47,13 @@ class Clients:
 
 
 class Webserver(threading.Thread):
-  def __init__(self, dispatcher = None):
+  def __init__(self, values, dispatcher = None):
     super(self.__class__, self).__init__()
 
     static_path     = os.path.dirname(__file__)+'/../web/static'
     template_path   = os.path.dirname(__file__)+'/../web/views'
 
+    self.values     = values
     self.dispatcher = dispatcher
     self.clients    = Clients()
     self.running    = False
@@ -61,7 +62,7 @@ class Webserver(threading.Thread):
                   "clients"       : self.clients,
                   "dispatcher"    : self.dispatcher
                }),
-      (r'/', IndexHandler, {"output": Values}),
+      (r'/', IndexHandler, {"output": self.values}),
     ],
     static_path   = static_path,
     template_path = template_path,
