@@ -17,7 +17,7 @@ class ApiSensorHandler(tornado.web.RequestHandler):
 
   @tornado.web.asynchronous
   def put(self, sensor, value):
-    print args, kwargs
+    print sensor, value
     self.clear()
     self.set_status(204)
     self.finish()
