@@ -25,8 +25,10 @@ var App = {
     $.each(data, function(collection, values){
       $.each(values, function(key, value){
         var selector = '[data-collection="'+collection+'"] .'+key;
-        if ($(selector).prop("tagName") == 'SELECT' || ($(selector).prop("tagName") == 'INPUT'))
+        if ($(selector).prop("tagName") == 'SELECT')
           $(selector).val(value.value);
+        else if ($(selector).prop("tagName") == 'INPUT')
+          $(selector).filter('[value='+value.value+']').prop('checked', true);
         else
           $(selector).html(value.value);
         selector = '[data-collection="'+collection+'"] .'+key+'_date';
