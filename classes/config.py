@@ -27,7 +27,7 @@ class Config:
         'heat': 'CUL_HM_HM_CC_RT_DN_319E0E'
       },
       'Schlafzimmer': {
-        'clima': 1313,
+        'clima': 1505,
         'heat': 'CUL_HM_HM_CC_RT_DN_319DFF'
       },
       'Kinderzimmer': {
@@ -47,7 +47,7 @@ class Config:
         'heat': None
       },
       'Balkon': {
-        'clima': 1486
+        'clima': 1327
       }
     }
 
