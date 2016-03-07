@@ -30,7 +30,7 @@ class App:
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['alecto_ws1700'])
     self.pilight.start()
 
-    self.lcd = Lcd()
+    self.lcd = Lcd(self.values)
     self.lcd.start()
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)

@@ -6,18 +6,19 @@ from classes.values import Values
 
 class Lcd(threading.Thread):
 
-  def __init__(self):
+  def __init__(self, values):
     threading.Thread.__init__(self)
     self.work       = threading.Event()
     self.running    = True
-    #self.lcd        = lcd()
+    self.values     = values
+    self.lcd        = lcd()
 
   def run(self):
     self.running = True
     while self.running:
-      values = copy.deepcopy(Values.getValues())
+      values = copy.deepcopy(self.values.getValues())
       for val in sorted(values):
-        #self.showData(values.get(val))
+        self.showData(values.get(val))
         self.work.wait(5)
         if not self.running: return
       self.work.wait(1)
