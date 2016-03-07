@@ -26,7 +26,7 @@ class App:
     self.hue.start()
 
     self.pilight = PilightClient(self.dispatcher)
-    self.pilight.registerCallback(self.switchCallback)
+    self.pilight.registerCallback(self.switchCallback, 'protocol', ['arctech_screen'])
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['alecto_ws1700'])
     self.pilight.start()
 
@@ -35,24 +35,7 @@ class App:
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
     self.fhem.registerCallback(self.fhemCallback)
-
-    climates = self.config.getClimates()
-    for climate in climates:
-      self.values.addCollection(climate.get('clima'), climate.get('room'))
-      self.values.addValue(climate.get('clima'), 'type', 'climate')
-      if climate.get('heat'):
-        heat = climate.get('heat')+'_Clima'
-        self.values.addCollection(heat, climate.get('room'))
-        self.values.addValue(heat, 'type', 'climate')
-        self.fhem.addDevice(heat, self.config.getClimateValues())
-
-    energies = self.config.getEnergies()
-    for energy in energies:
-      device = energy.get('device')
-      self.values.addCollection(device, energy.get('name'))
-      self.values.addValue(device, 'type', 'energy')
-      self.fhem.addDevice(device, self.config.getEnergyValues())
-
+    self.config.initDevices(self.fhem, self.values)
     self.fhem.start()
 
     self.events = Events(self.dispatcher)

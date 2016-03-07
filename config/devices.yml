@@ -37,3 +37,9 @@ energy:
     -
       name: 'Steckdose1'
       device: 'CUL_HM_HM_ES_PMSw1_Pl_32889A_Sw'
+
+plant:
+  devices:
+    -
+      room: 'Artbeitszimmer'
+      device: 'id...'

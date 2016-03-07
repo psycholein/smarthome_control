@@ -38,7 +38,7 @@ class PilightClient(threading.Thread):
             break
     return responses.values()
 
-  def registerCallback(self, callback, key = 'protocol', values = ['arctech_screen']):
+  def registerCallback(self, callback, key, values):
     self.callbacks.append({'func': callback, 'key': key, 'values': values})
 
   def removeCallback(self, callback):

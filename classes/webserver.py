@@ -11,6 +11,17 @@ class IndexHandler(tornado.web.RequestHandler):
   def get(self):
     self.render('index.html', output=self.output)
 
+class ApiSensorHandler(tornado.web.RequestHandler):
+  def initialize(self, dispatcher):
+    self.dispatcher = dispatcher
+
+  @tornado.web.asynchronous
+  def put(self, sensor, value):
+    print args, kwargs
+    self.clear()
+    self.set_status(204)
+    self.finish()
+
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
   def initialize(self, clients, dispatcher):
     self.clients    = clients
@@ -58,15 +69,19 @@ class Webserver(threading.Thread):
     self.clients    = Clients()
     self.running    = False
     self.app        = tornado.web.Application([
-      (r'/ws', WebSocketHandler, {
-                  "clients"       : self.clients,
-                  "dispatcher"    : self.dispatcher
-               }),
-      (r'/', IndexHandler, {"output": self.values}),
-    ],
-    static_path   = static_path,
-    template_path = template_path,
-    autoreload    = False)
+        (r'/ws', WebSocketHandler, {
+                    "clients"       : self.clients,
+                    "dispatcher"    : self.dispatcher
+                 }),
+        (r'/api/sensor/(.*)/(.*)', ApiSensorHandler, {
+                                    "dispatcher": self.dispatcher
+                                   }),
+        (r'/', IndexHandler, { "output": self.values }),
+      ],
+      static_path   = static_path,
+      template_path = template_path,
+      autoreload    = False
+    )
 
   def run(self):
     self.running = True
