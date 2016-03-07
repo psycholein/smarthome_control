@@ -42,4 +42,4 @@ plant:
   devices:
     -
       room: 'Artbeitszimmer'
-      device: 'id...'
+      device: '1280850'
