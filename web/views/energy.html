@@ -9,14 +9,14 @@
 		<li data-collection="{{ item.get('collection') }}">
 			<label>{{ item.get('collection') }}:</label>
 			<ol>
-				<li class="sensor" data-state="{{ state }}">
+				<li class="sensor">
 					Status:
           <label>
-            <input class="value" type="radio" name="{{ item.get('device',{}).get('value','') }}" data-route="setEnergy" data-event="change" {% if 'on' in state %}checked="checked"{% end %} value="on">
+            <input class="state" type="radio" name="{{ item.get('device',{}).get('value','') }}" data-route="setEnergy" data-event="change" {% if 'on' in state %}checked="checked"{% end %} value="on">
             An
           </label>
           <label>
-            <input class="value" type="radio" name="{{ item.get('device',{}).get('value','') }}" data-route="setEnergy" data-event="change" {% if 'off' in state %}checked="checked"{% end %} value="off">
+            <input class="state" type="radio" name="{{ item.get('device',{}).get('value','') }}" data-route="setEnergy" data-event="change" {% if 'off' in state %}checked="checked"{% end %} value="off">
             Aus
           </label>
 					<small>(<span class="device_date">{{ item.get('device',{}).get('date','') }}</span>)</small>
