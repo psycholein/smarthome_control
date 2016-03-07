@@ -22,14 +22,16 @@ var App = {
   },
 
   updateData: function(data) {
-    $.each(data, function(room, values){
+    $.each(data, function(collection, values){
       $.each(values, function(key, value){
-        var selector = '[data-room="'+room+'"] .'+key;
+        var selector = '[data-collection="'+collection+'"] .'+key;
         if ($(selector).prop("tagName") == 'SELECT')
           $(selector).val(value.value);
+        else if ($(selector).prop("tagName") == 'INPUT')
+          $(selector).filter('[value='+value.value+']').prop('checked', true);
         else
           $(selector).html(value.value);
-        selector = '[data-room="'+room+'"] .'+key+'_date';
+        selector = '[data-collection="'+collection+'"] .'+key+'_date';
         $(selector).html(value.date);
       });
     });

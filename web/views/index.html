@@ -2,20 +2,24 @@
 
 {% block content %}
 
-  <template is="auto-binding">
-    <paper-tabs selected="{% raw '{{ view }}' %}">
-      <paper-tab>Data</paper-tab>
-      <paper-tab>Events</paper-tab>
-      <paper-tab>Config</paper-tab>
-    </paper-tabs>
+	<template is="auto-binding">
+		<paper-tabs selected="{% raw '{{ view }}' %}">
+			<paper-tab>Klima</paper-tab>
+			<paper-tab>Energie</paper-tab>
+			<paper-tab>Pflanzen</paper-tab>
+		</paper-tabs>
 
-    <core-pages selected="{% raw '{{ view }}' %}">
-      <div id="data">
-        {% include "data.html" %}
+		<core-pages selected="{% raw '{{ view }}' %}">
+			<div id="climate" class="data">
+				{% include "climate.html" %}
+			</div>
+			<div id="energy" class="data">
+        {% include "energy.html" %}
       </div>
-      <div id="events">Events</div>
-      <div id="config">Config</div>
-    </core-pages>
-  </template>
+			<div id="plants" class="data">
+        {% include "plants.html" %}
+      </div>
+		</core-pages>
+	</template>
 
 {% end %}

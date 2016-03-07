@@ -1,26 +1,28 @@
 import time
 
 class Values:
-  climate = {}
-  rooms   = {}
-  changed = True
+  def __init__(self):
+    self.data        = {}
+    self.collections = {}
+    self.changed     = True
 
-  @staticmethod
-  def addValue(uid, typ, value):
-    if not Values.rooms.has_key(uid): return
-    room = Values.rooms.get(uid)
-    if not Values.climate.get(room): Values.climate[room] = {'room': room}
-    if Values.climate[room].get(typ) != value:
-      Values.changed = True
-      Values.climate[room][typ] = {
+  def addValue(self, uid, typ, value):
+    if not self.collections.has_key(uid): return
+    collection = self.collections.get(uid)
+    if not self.data.get(collection):
+      self.data[collection] = {'collection': collection}
+    if self.data[collection].get(typ) != value:
+      self.changed = True
+      self.data[collection][typ] = {
         'value': value,
         'date':  time.strftime('%X')
       }
 
-  @staticmethod
-  def addRoom(uid, name):
-    if uid: Values.rooms[uid] = name
+  def addCollection(self, uid, name):
+    if uid: self.collections[uid] = name
 
-  @staticmethod
-  def getValues():
-    return Values.climate
+  def getValues(self):
+    return self.data
+
+  def getCollectionValues(self, collection):
+    return self.data.get(collection, {})

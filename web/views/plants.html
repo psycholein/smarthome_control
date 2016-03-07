@@ -1,0 +1,18 @@
+<ul>
+	{% set items = output.getValues() %}
+	{% for key in sorted(items) %}
+		{% set item = items.get(key) %}
+		{% if item.get('type', {}).get('value', '') != 'plant' %}
+			{% continue %}
+		{% end %}
+		<li data-collection="{{ item.get('collection') }}">
+			<label>{{ item.get('collection') }}:</label>
+			<ol>
+				<li class="sensor">
+					Status: <span class="humidity">{{ item.get('humidity',{}).get('value','') }}</span>
+					<small>(<span class="device_date">{{ item.get('device',{}).get('date','') }}</span>)</small>
+				</li>
+			</ol>
+		</li>
+	{% end %}
+</ul>

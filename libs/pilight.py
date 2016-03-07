@@ -38,7 +38,7 @@ class PilightClient(threading.Thread):
             break
     return responses.values()
 
-  def registerCallback(self, callback, key = 'protocol', values = ['arctech_screen']):
+  def registerCallback(self, callback, key, values):
     self.callbacks.append({'func': callback, 'key': key, 'values': values})
 
   def removeCallback(self, callback):
@@ -102,11 +102,11 @@ class PilightClient(threading.Thread):
       s.send('{"action":"identify","options":{"receiver":1}}\n')
       data = ""
       while True:
-	if self.stopped: return
+        if self.stopped: return
         ready = select.select([s], [], [], 10)
         if not ready[0]: return
         line = s.recv(1024)
-	data += line
+        data += line
         if "\n\n" in line[-2:]:
           data = data[:-2]
           break

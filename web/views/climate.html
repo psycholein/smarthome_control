@@ -1,0 +1,39 @@
+<ul>
+	{% set items = output.getValues() %}
+	{% for key in sorted(items) %}
+		{% set item = items.get(key) %}
+		{% if item.get('type', {}).get('value', '') != 'climate' %}
+			{% continue %}
+		{% end %}
+		<li data-collection="{{ item.get('collection') }}">
+			<label>{{ item.get('collection') }}:</label>
+			<ol>
+				<li class="sensor">
+					Sensor:
+					<span class="temperature">{{ item.get('temperature',{}).get('value','') }}</span>°C,
+					<span class="humidity">{{ item.get('humidity',{}).get('value','') }}</span>%
+					<small>(<span class="temperature_date">{{ item.get('temperature',{}).get('date','00:00:00') }}</span>)</small>
+				</li>
+				{% if item.get('device') %}
+					<li class="heat">
+						Heizung:
+						<span class="measured-temp">{{ item.get('measured-temp',{}).get('value','') }}</span>°C
+						<span>
+							<select class="desired-temp" name="{{ item.get('device',{}).get('value','') }}" data-route="setDesiredTemp" data-event="change">
+								{% for i in range(30) %}
+									{% set temp = i * 0.5 + 15 %}
+									{% set desired = item.get('desired-temp',{}).get('value','') %}
+									<option value="{{ temp }}" {% if str(desired) == str(temp) %}selected="selected"{% end %}>
+										{{ temp }}°C
+									</option>
+								{% end %}
+							</select>
+							<small>(<span class="device_date">{{ item.get('device',{}).get('date','') }}</span>)</small>
+							<span class="info">{% raw item.get('info',{}).get('value','') %}</span>
+						</span>
+					</li>
+				{% end %}
+			</ol>
+		</li>
+	{% end %}
+</ul>

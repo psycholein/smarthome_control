@@ -8,6 +8,7 @@ from classes.webserver import Webserver
 from classes.values import Values
 from classes.dispatcher import Dispatcher
 from classes.events import Events
+from classes.api import Api
 
 class App:
 
@@ -18,42 +19,36 @@ class App:
     self.setPid()
 
     self.config = Config()
+    self.values = Values()
+
     self.dispatcher = Dispatcher(self.config.routes())
 
     self.hue = Hue(self.config.getHueIP(), self.dispatcher)
     self.hue.start()
 
     self.pilight = PilightClient(self.dispatcher)
-    self.pilight.registerCallback(self.switchCallback)
+    self.pilight.registerCallback(self.switchCallback, 'protocol', ['arctech_screen'])
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['alecto_ws1700'])
     self.pilight.start()
 
-    self.lcd = Lcd()
+    self.lcd = Lcd(self.values)
     self.lcd.start()
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
-    for attr in self.config.fhemAttr(): self.fhem.addAttribute(attr)
     self.fhem.registerCallback(self.fhemCallback)
-
-    sensors = self.config.getSensors()
-    for room in sensors:
-      sensor = sensors[room]
-      Values.addRoom(sensor.get('clima'), room)
-      if sensor.get('heat'):
-        heat = sensor.get('heat')+'_Clima'
-        Values.addRoom(heat, room)
-        self.fhem.addDevice(heat)
-
+    self.config.initDevices(self.fhem, self.values)
     self.fhem.start()
+
+    self.api = Api(self.values)
 
     self.events = Events(self.dispatcher)
     self.events.start()
 
-    self.webserver = Webserver(self.dispatcher)
+    self.webserver = Webserver(self.values, self.dispatcher)
     self.webserver.start()
 
     self.dispatcher.addDispatchObject(
-      self, self.hue, self.pilight, self.fhem, self.events, self.webserver)
+      self, self.hue, self.pilight, self.fhem, self.events, self.webserver, self.api)
     self.dispatcher.start()
 
     self.serve()
@@ -68,7 +63,7 @@ class App:
       except:
         pass
       else:
-        time.sleep(5)
+        time.sleep(2)
     file(self.pidfile, 'w').write(pid)
 
   def clearPid(self):
@@ -81,6 +76,7 @@ class App:
       try:
         run = False
         for thread in threads:
+          self.sendChanges()
           thread.join(1)
           if thread.isAlive(): run = True
         if not run:
@@ -88,32 +84,32 @@ class App:
           return
       except KeyboardInterrupt:
         for thread in threads: thread.stop()
-      finally:
-        if Values.changed:
-          data = {
-            'params': ['path', 'values'],
-            'path':   'outputToJs',
-            'values': Values.getValues()
-          }
-          Values.changed = False
-          self.dispatcher.send(data)
+
+  def sendChanges(self):
+    if self.values.changed:
+      data = {
+        'params': ['path', 'values'],
+        'path':   'outputToJs',
+        'values': self.values.getValues()
+      }
+      self.values.changed = False
+      self.dispatcher.send(data)
 
   def fhemCallback(self, data):
-    print data
     uid = data.get('id')
-    for attr in self.config.fhemAttr():
+    for attr in data.get('values').get('attr'):
       value = data.get(attr)
       if value:
-        if attr == 'state':
+        if attr == 'state' and data.get('values').get('type') == 'climate':
           if value.find('set_desired-temp') != -1:
             desired = value.replace('set_desired-temp','').strip()
-            Values.addValue(uid, 'desired-temp', desired)
-            Values.addValue(uid, 'info', 'Set to %s&deg;C (Current: %s&deg;C)' %(desired, data.get('desired-temp')))
+            self.values.addValue(uid, 'desired-temp', desired)
+            self.values.addValue(uid, 'info', 'Set to %s&deg;C (Current: %s&deg;C)' %(desired, data.get('desired-temp')))
           else:
-            Values.addValue(uid, 'info', '')
+            self.values.addValue(uid, 'info', '')
         else:
-          Values.addValue(uid, attr, value)
-          Values.addValue(uid, 'device', uid)
+          self.values.addValue(uid, attr, value)
+          self.values.addValue(uid, 'device', uid)
 
   def climateCallback(self, data):
     code = data.get('message')
@@ -122,8 +118,8 @@ class App:
     temperature = code.get('temperature')
     humidity    = code.get('humidity')
 
-    if temperature: Values.addValue(code.get('id'), 'temperature', temperature)
-    if humidity: Values.addValue(code.get('id'), 'humidity', humidity)
+    if temperature: self.values.addValue(code.get('id'), 'temperature', temperature)
+    if humidity: self.values.addValue(code.get('id'), 'humidity', humidity)
 
   def switchCallback(self, data):
     code = data.get('message')

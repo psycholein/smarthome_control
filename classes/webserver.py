@@ -11,6 +11,22 @@ class IndexHandler(tornado.web.RequestHandler):
   def get(self):
     self.render('index.html', output=self.output)
 
+class ApiSensorHandler(tornado.web.RequestHandler):
+  def initialize(self, dispatcher):
+    self.dispatcher = dispatcher
+
+  @tornado.web.asynchronous
+  def get(self, sensor, value):
+    if self.dispatcher:
+      data = {
+        'path':   'sensor',
+        'values': { 'device': sensor, 'value': value }
+      }
+      self.dispatcher.send(data)
+    self.clear()
+    self.set_status(204)
+    self.finish()
+
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
   def initialize(self, clients, dispatcher):
     self.clients    = clients
@@ -47,25 +63,30 @@ class Clients:
 
 
 class Webserver(threading.Thread):
-  def __init__(self, dispatcher = None):
+  def __init__(self, values, dispatcher = None):
     super(self.__class__, self).__init__()
 
     static_path     = os.path.dirname(__file__)+'/../web/static'
     template_path   = os.path.dirname(__file__)+'/../web/views'
 
+    self.values     = values
     self.dispatcher = dispatcher
     self.clients    = Clients()
     self.running    = False
     self.app        = tornado.web.Application([
-      (r'/ws', WebSocketHandler, {
-                  "clients"       : self.clients,
-                  "dispatcher"    : self.dispatcher
-               }),
-      (r'/', IndexHandler, {"output": Values}),
-    ],
-    static_path   = static_path,
-    template_path = template_path,
-    autoreload    = False)
+        (r'/ws', WebSocketHandler, {
+                    "clients"       : self.clients,
+                    "dispatcher"    : self.dispatcher
+                 }),
+        (r'/api/sensor/(.*)/(.*)', ApiSensorHandler, {
+                                    "dispatcher": self.dispatcher
+                                   }),
+        (r'/', IndexHandler, { "output": self.values }),
+      ],
+      static_path   = static_path,
+      template_path = template_path,
+      autoreload    = False
+    )
 
   def run(self):
     self.running = True

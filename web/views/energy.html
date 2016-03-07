@@ -1,0 +1,27 @@
+<ul>
+	{% set items = output.getValues() %}
+	{% for key in sorted(items) %}
+		{% set item = items.get(key) %}
+		{% if item.get('type', {}).get('value', '') != 'energy' %}
+			{% continue %}
+		{% end %}
+    {% set state = item.get('state',{}).get('value','') %}
+		<li data-collection="{{ item.get('collection') }}">
+			<label>{{ item.get('collection') }}:</label>
+			<ol>
+				<li class="sensor">
+					Status:
+          <label>
+            <input class="state" type="radio" name="{{ item.get('device',{}).get('value','') }}" data-route="setEnergy" data-event="change" {% if 'on' in state %}checked="checked"{% end %} value="on">
+            An
+          </label>
+          <label>
+            <input class="state" type="radio" name="{{ item.get('device',{}).get('value','') }}" data-route="setEnergy" data-event="change" {% if 'off' in state %}checked="checked"{% end %} value="off">
+            Aus
+          </label>
+					<small>(<span class="device_date">{{ item.get('device',{}).get('date','') }}</span>)</small>
+				</li>
+			</ol>
+		</li>
+	{% end %}
+</ul>
