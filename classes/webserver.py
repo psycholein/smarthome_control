@@ -19,7 +19,6 @@ class ApiSensorHandler(tornado.web.RequestHandler):
   def get(self, sensor, value):
     if self.dispatcher:
       data = {
-        'params': ['path', 'values'],
         'path':   'sensor',
         'values': { 'device': sensor, 'value': value }
       }
