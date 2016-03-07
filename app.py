@@ -39,7 +39,7 @@ class App:
     self.config.initDevices(self.fhem, self.values)
     self.fhem.start()
 
-    self.api = Api()
+    self.api = Api(self.values)
 
     self.events = Events(self.dispatcher)
     self.events.start()
