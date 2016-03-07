@@ -16,7 +16,7 @@ class ApiSensorHandler(tornado.web.RequestHandler):
     self.dispatcher = dispatcher
 
   @tornado.web.asynchronous
-  def put(self, sensor, value):
+  def get(self, sensor, value):
     if self.dispatcher:
       data = {
         'params': ['path', 'values'],
