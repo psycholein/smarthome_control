@@ -19,6 +19,7 @@
             <input class="value" type="radio" name="{{ item.get('device',{}).get('value','') }}" data-route="setEnergy" data-event="change" {% if 'off' in state %}checked="checked"{% end %} value="off">
             Aus
           </label>
+					<small>(<span class="device_date">{{ item.get('device',{}).get('date','') }}</span>)</small>
 				</li>
 			</ol>
 		</li>
