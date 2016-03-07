@@ -9,7 +9,7 @@
 			<label>{{ item.get('collection') }}:</label>
 			<ol>
 				<li class="sensor">
-					Status: {{ item.get('state',{}).get('value','') }}
+					Status: <span class="value">{{ item.get('humidity',{}).get('value','') }}</span>
 				</li>
 			</ol>
 		</li>
