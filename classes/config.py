@@ -34,7 +34,7 @@ class Config:
             'type': 'energy', 'config': self.getEnergies()}
 
   def getPlants(self):
-    return self.devices.get('plants').get('devices')
+    return self.devices.get('plant').get('devices')
 
 
   def routes(self):
