@@ -2,9 +2,9 @@ import time
 
 class Values:
   def __init__(self):
-    data        = {}
-    collections = {}
-    changed     = True
+    self.data        = {}
+    self.collections = {}
+    self.changed     = True
 
   def addValue(self, uid, typ, value):
     if not self.collections.has_key(uid): return
