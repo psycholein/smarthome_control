@@ -17,7 +17,13 @@ class ApiSensorHandler(tornado.web.RequestHandler):
 
   @tornado.web.asynchronous
   def put(self, sensor, value):
-    print sensor, value
+    if self.dispatcher:
+      data = {
+        'params': ['path', 'values'],
+        'path':   'sensor',
+        'values': { 'device': sensor, 'value': value }
+      }
+      self.dispatcher.send(data)
     self.clear()
     self.set_status(204)
     self.finish()

@@ -43,6 +43,7 @@ class Config:
     routes.addRoute('setEnergy', 'Fhem', 'setEnergy')
     routes.addRoute('outputToJs', 'Webserver', 'send')
     routes.addRoute('hue', 'Hue', 'do')
+    routes.addRoute('sensor', 'Api', 'sensor')
     return routes
 
   def initDevices(self, fhem, values):

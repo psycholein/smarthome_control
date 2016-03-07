@@ -79,7 +79,6 @@ class Fhem(threading.Thread):
   def setDesiredTemp(self, values):
     device = values.get('device')
     value  = values.get('value')
-
     if not device or not value: return
 
     request = requests.get(self.api + self.temp.format(device=device, value=value))
@@ -89,7 +88,6 @@ class Fhem(threading.Thread):
   def setEnergy(self, values):
     device = values.get('device')
     value  = values.get('value')
-
     if not device or not value: return
 
     request = requests.get(self.api + self.energy.format(device=device, value=value))

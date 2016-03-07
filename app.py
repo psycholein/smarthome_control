@@ -8,6 +8,7 @@ from classes.webserver import Webserver
 from classes.values import Values
 from classes.dispatcher import Dispatcher
 from classes.events import Events
+from classes.api import Api
 
 class App:
 
@@ -38,6 +39,8 @@ class App:
     self.config.initDevices(self.fhem, self.values)
     self.fhem.start()
 
+    self.api = Api()
+
     self.events = Events(self.dispatcher)
     self.events.start()
 
@@ -45,7 +48,7 @@ class App:
     self.webserver.start()
 
     self.dispatcher.addDispatchObject(
-      self, self.hue, self.pilight, self.fhem, self.events, self.webserver)
+      self, self.hue, self.pilight, self.fhem, self.events, self.webserver, self.api)
     self.dispatcher.start()
 
     self.serve()
