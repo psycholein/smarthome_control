@@ -35,7 +35,7 @@ energy:
     - 'state'
   devices:
     -
-      name: 'Steckdose1'
+      name: 'Luftentfeuchter'
       device: 'CUL_HM_HM_ES_PMSw1_Pl_32889A_Sw'
 
 plant:

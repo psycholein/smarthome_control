@@ -63,7 +63,7 @@ class Clients:
 
 
 class Webserver(threading.Thread):
-  def __init__(self, values, dispatcher = None):
+  def __init__(self, values, dispatcher = None, port = 80):
     super(self.__class__, self).__init__()
 
     static_path     = os.path.dirname(__file__)+'/../web/static'
@@ -71,6 +71,7 @@ class Webserver(threading.Thread):
 
     self.values     = values
     self.dispatcher = dispatcher
+    self.port       = port
     self.clients    = Clients()
     self.running    = False
     self.app        = tornado.web.Application([
@@ -90,7 +91,7 @@ class Webserver(threading.Thread):
 
   def run(self):
     self.running = True
-    self.app.listen(3000)
+    self.app.listen(self.port)
     tornado.ioloop.IOLoop.instance().start()
 
     self.running = False
