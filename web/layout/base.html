@@ -12,11 +12,13 @@
 		<link rel="import" href="{{path}}polymer/polymer.html">
 		<link rel="import" href="{{path}}paper-tabs/paper-tabs.html">
 		<link rel="import" href="{{path}}core-pages/core-pages.html">
+		<link rel="manifest" href="manifest.json">
 	</head>
 	<body unresolved>
 		<div id="content">
 			{% block content %}{% end %}
 		</div>
 		<script type="text/javascript" src="/static/app.js"></script>
+		<script type="text/javascript" src="/static/notification.js"></script>
 	</body>
 </html>
