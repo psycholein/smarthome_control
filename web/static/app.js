@@ -47,9 +47,7 @@ var App = {
     ws: App.protocol+"://"+document.location.host+"/ws"
   },
 
-  protocol: {
-    "ws" + (location.protocol == "https" ? "s" : "")
-  },
+  protocol: "ws" + (location.protocol == "https" ? "s" : "",
 
   events: {
     connected: function(event) {
