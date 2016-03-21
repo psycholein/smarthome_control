@@ -44,7 +44,11 @@ var App = {
   },
 
   config: {
-    ws: "ws://"+document.location.host+"/ws"
+    ws: App.protocol+"://"+document.location.host+"/ws"
+  },
+
+  protocol: {
+    "ws" + (location.protocol == "https" ? "s" : "")
   },
 
   events: {
