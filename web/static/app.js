@@ -48,7 +48,7 @@ var App = {
   },
 
   protocol: function() {
-    return "ws" + (location.protocol == "https" ? "s" : "");
+    return "ws" + (location.protocol == "https:" ? "s" : "");
   },
 
   events: {
