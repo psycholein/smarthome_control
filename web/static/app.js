@@ -43,12 +43,9 @@ var App = {
     }
   },
 
-  protocol: function() {
-    return "ws" + (location.protocol == "https:" ? "s" : "");
-  },
-
   config: {
-    ws: App.protocol()+"://"+document.location.host+"/ws"
+    ws: "ws" + (location.protocol == "https:" ? "s" : "") +
+        "://"+document.location.host+"/ws"
   },
 
   events: {
