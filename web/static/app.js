@@ -44,10 +44,12 @@ var App = {
   },
 
   config: {
-    ws: App.protocol+"://"+document.location.host+"/ws"
+    ws: App.protocol()+"://"+document.location.host+"/ws"
   },
 
-  protocol: "ws" + (location.protocol == "https" ? "s" : "",
+  protocol: function() {
+    return "ws" + (location.protocol == "https" ? "s" : "";
+  },
 
   events: {
     connected: function(event) {
