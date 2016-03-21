@@ -43,12 +43,12 @@ var App = {
     }
   },
 
-  config: {
-    ws: App.protocol()+"://"+document.location.host+"/ws"
-  },
-
   protocol: function() {
     return "ws" + (location.protocol == "https:" ? "s" : "");
+  },
+
+  config: {
+    ws: App.protocol()+"://"+document.location.host+"/ws"
   },
 
   events: {
