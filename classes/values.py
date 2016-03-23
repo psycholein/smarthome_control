@@ -11,9 +11,9 @@ class Values:
     collection = self.collections.get(uid)
     if not self.data.get(collection):
       self.data[collection] = {'collection': collection}
-    if self.data[collection].get(typ) != value:
+    if self.data[collection].get(str(typ)) != value:
       self.changed = True
-      self.data[collection][typ] = {
+      self.data[collection][str(typ)] = {
         'value': value,
         'date':  time.strftime('%X')
       }
