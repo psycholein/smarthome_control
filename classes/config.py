@@ -36,6 +36,9 @@ class Config:
   def getPlants(self):
     return self.devices.get('plant').get('devices')
 
+  def getNotification(self):
+    return self.base.get('notification')
+
   def initDevices(self, fhem, values):
     climates = self.getClimates()
     for climate in climates:
@@ -68,4 +71,5 @@ class Config:
     routes.addRoute('outputToJs', 'Webserver', 'send')
     routes.addRoute('hue', 'Hue', 'do')
     routes.addRoute('sensor', 'Api', 'sensor')
+    routes.addRoute('notification', 'Notification', 'addClient')
     return routes

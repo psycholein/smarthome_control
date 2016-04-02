@@ -1,3 +1,4 @@
+{% set path = '../static/bower_components/' %}
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -7,18 +8,16 @@
 		<title>SmartHome</title>
 		<link rel="stylesheet" href="/static/main.css" type="text/css" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		{% set path = '../static/bower_components/' %}
 		<script src="{{path}}webcomponentsjs/webcomponents.min.js"></script>
 		<link rel="import" href="{{path}}polymer/polymer.html">
 		<link rel="import" href="{{path}}paper-tabs/paper-tabs.html">
 		<link rel="import" href="{{path}}core-pages/core-pages.html">
-		<link rel="manifest" href="manifest.json">
+		<link rel="manifest" href="/static/manifest.json">
 	</head>
 	<body unresolved>
 		<div id="content">
 			{% block content %}{% end %}
 		</div>
 		<script type="text/javascript" src="/static/app.js"></script>
-		<script type="text/javascript" src="/static/notification.js"></script>
 	</body>
 </html>

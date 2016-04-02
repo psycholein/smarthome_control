@@ -9,6 +9,7 @@ from classes.values import Values
 from classes.dispatcher import Dispatcher
 from classes.events import Events
 from classes.api import Api
+from classes.notification import Notification
 
 class App:
 
@@ -23,6 +24,8 @@ class App:
 
     self.dispatcher = Dispatcher(self.config.routes())
 
+    self.notification = Notification(self.config.getNotification())
+
     self.hue = Hue(self.config.getHueIP(), self.dispatcher)
     self.hue.start()
 
@@ -34,7 +37,8 @@ class App:
     self.lcd = Lcd(self.values)
     self.lcd.start()
 
-    self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
+    self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(),
+                     self.dispatcher)
     self.fhem.registerCallback(self.fhemCallback)
     self.config.initDevices(self.fhem, self.values)
     self.fhem.start()
@@ -48,7 +52,8 @@ class App:
     self.webserver.start()
 
     self.dispatcher.addDispatchObject(
-      self, self.hue, self.pilight, self.fhem, self.events, self.webserver, self.api)
+      self, self.hue, self.pilight, self.fhem, self.events, self.webserver,
+      self.api, self.notification)
     self.dispatcher.start()
 
     self.serve()

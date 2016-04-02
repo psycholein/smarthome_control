@@ -1,9 +1,10 @@
 var App = {
   setup: function() {
-    document.querySelector("template").view = 0;
     App.network.connect();
+    App.notification.setup();
 
     $(window).bind('polymer-ready', App.init);
+    document.querySelector("template").view = 0;
   },
 
   init: function() {
@@ -102,6 +103,38 @@ var App = {
           App.network.send(msg);
         }, 2000);
       }
+    }
+  },
+
+  notification: {
+    client: null,
+
+    setup: function() {
+      if ('serviceWorker' in navigator) {
+        console.log('Service Worker is supported');
+        navigator.serviceWorker.register('/static/sw.js').then(function(reg) {
+          console.log(':^)', reg);
+          reg.pushManager.subscribe({
+            userVisibleOnly: true
+          }).then(function(sub) {
+            console.log('endpoint:', sub.endpoint);
+            App.notification.client = sub.endpoint
+            App.notification.send()
+          });
+        }).catch(function(err) {
+          console.log(':^(', err);
+        });
+      }
+    },
+
+    send: function() {
+      var data = {
+        'path':   'notification',
+        'values': {
+          'client': App.notification.client
+        }
+      };
+      App.network.send(JSON.stringify(data));
     }
   }
 };
