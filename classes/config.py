@@ -39,26 +39,22 @@ class Config:
   def initDevices(self, fhem, values):
     climates = self.getClimates()
     for climate in climates:
-      values.addCollection(climate.get('clima'), climate.get('room'))
-      values.addValue(climate.get('clima'), 'type', 'climate')
+      values.addCollection(climate.get('clima'), climate.get('room'), 'climate')
       if climate.get('heat'):
         heat = climate.get('heat')+'_Clima'
-        values.addCollection(heat, climate.get('room'))
-        values.addValue(heat, 'type', 'climate')
+        values.addCollection(heat, climate.get('room'), 'climate')
         fhem.addDevice(heat, self.getClimateValues())
 
     energies = self.getEnergies()
     for energy in energies:
       device = energy.get('device')
-      values.addCollection(device, energy.get('name'))
-      values.addValue(device, 'type', 'energy')
+      values.addCollection(device, energy.get('name'), 'energy')
       fhem.addDevice(device, self.getEnergyValues())
 
     plants = self.getPlants()
     for plant in plants:
       device = plant.get('device')
-      values.addCollection(device, plant.get('room'))
-      values.addValue(device, 'type', 'plant')
+      values.addCollection(device, plant.get('room'), 'plant')
 
 
   def routes(self):

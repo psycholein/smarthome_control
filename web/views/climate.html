@@ -1,9 +1,5 @@
 <ul>
-	{% set items = output.getValues('climate') %}
-	{% for key, item in sorted(items) %}
-		{% if item.get('type', {}).get('value', '') != 'climate' %}
-			{% continue %}
-		{% end %}
+	{% for key, item in output.getValues('climate') %}
 		<li data-collection="{{ item['collection']['name'] }}">
 			<label>{{ item['collection']['name'] }}:</label>
 			<ol>
