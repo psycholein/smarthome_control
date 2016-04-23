@@ -20,7 +20,8 @@ class Values:
   def addCollection(self, uid, name, category):
     self.collections[str(uid)] = { 'name': name, 'category': category }
     if not self.data.has_key(category): self.data[category] = {}
-    self.data[category][name] = { 'collection': self.collections[str(uid)] }
+    if not self.data[category].has_key(name):
+      self.data[category][name] = { 'collection': self.collections[str(uid)] }
     self.data[category] = sorted(self.data[category])
 
 
