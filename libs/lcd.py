@@ -16,10 +16,8 @@ class Lcd(threading.Thread):
   def run(self):
     self.running = True
     while self.running:
-      values = copy.deepcopy(self.values.getValues())
-      for val in sorted(values):
-        if values.get(val).get('type', {}).get('value', '') != 'climate':
-          continue
+      values = copy.deepcopy(self.values.getValues('climate'))
+      for val in values:
         self.showData(values.get(val))
         self.work.wait(5)
         if not self.running: return
@@ -29,7 +27,7 @@ class Lcd(threading.Thread):
     if not self.running: return self.running
     self.work.clear()
     self.lcd.lcd_clear()
-    self.lcd.lcd_display_string(data.get('collection', ''), 1)
+    self.lcd.lcd_display_string(data['collection']['name'], 1)
     temp = data.get('temperature',{}).get('value','')
     self.lcd.lcd_display_string("Temperatur: %s" % temp, 2)
     hum = data.get('humidity',{}).get('value','')

@@ -7,22 +7,22 @@ class Values:
     self.changed     = True
 
   def addValue(self, uid, typ, value):
-    if not self.collections.has_key(uid): return
     collection = self.collections.get(uid)
-    if not self.data.get(collection):
-      self.data[collection] = {'collection': collection}
-    if self.data[collection].get(str(typ)) != value:
+    if not collection: return
+    data = self.data[collection['category']][collection['name']].get(str(typ))
+    if !data:
+      self.data[collection['category']][collection['name']][str(typ)] = {}
+      data = self.data[collection['category']][collection['name']][str(typ)]
+    if data[str(typ)].get('value') != value:
       self.changed = True
-      self.data[collection][str(typ)] = {
-        'value': value,
-        'date':  time.strftime('%X')
-      }
+      data[str(typ)] = { 'value': value, 'date': time.strftime('%X') }
 
-  def addCollection(self, uid, name):
-    if uid: self.collections[uid] = name
+  def addCollection(self, uid, catgeory, name):
+    self.collections[uid] = {'name': name, 'catgeory': catgeory}
+    if not self.data.has_key(catgeory): self.data[catgeory] = {}
+    self.data[catgeory][name] = { 'collection': self.collections[uid] }
+    self.data[catgeory] = sorted(self.data[catgeory])
 
-  def getValues(self):
-    return self.data
 
-  def getCollectionValues(self, collection):
-    return self.data.get(collection, {})
+  def getValues(self, catgeory):
+    return self.data.get(category, {})

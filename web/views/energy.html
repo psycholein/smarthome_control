@@ -1,13 +1,12 @@
 <ul>
-	{% set items = output.getValues() %}
-	{% for key in sorted(items) %}
-		{% set item = items.get(key) %}
+	{% set items = output.getValues('energy') %}
+	{% for key, item in sorted(items) %}
 		{% if item.get('type', {}).get('value', '') != 'energy' %}
 			{% continue %}
 		{% end %}
     {% set state = item.get('state',{}).get('value','') %}
-		<li data-collection="{{ item.get('collection') }}">
-			<label>{{ item.get('collection') }}:</label>
+		<li data-collection="{{ item['collection']['name'] }}">
+			<label>{{ item['collection']['name'] }}:</label>
 			<ol>
 				<li class="sensor">
 					Status:
