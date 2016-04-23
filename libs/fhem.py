@@ -16,6 +16,8 @@ class Fhem(threading.Thread):
     self.devices    = []
     self.callbacks  = []
     self.work       = threading.Event()
+    self.dispatcher.addRoute("setDesiredTemp", self.setDesiredTemp)
+    self.dispatcher.addRoute("setEnergy", self.setEnergy)
 
   def run(self):
     self.running = True

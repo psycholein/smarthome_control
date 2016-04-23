@@ -1,11 +1,13 @@
 import yaml
-from classes.routes import Routes
 
 class Config:
 
   def __init__(self):
     self.base = yaml.load(file('config/base.yml', 'r'))
     self.devices = yaml.load(file('config/devices.yml', 'r'))
+
+  def getWebserverPort(self):
+    return self.base.get('webserver')
 
   def getHueIP(self):
     return self.base.get('hue')
@@ -55,13 +57,3 @@ class Config:
     for plant in plants:
       device = plant.get('device')
       values.addCollection(device, plant.get('room'), 'plant')
-
-
-  def routes(self):
-    routes = Routes()
-    routes.addRoute('setDesiredTemp', 'Fhem', 'setDesiredTemp')
-    routes.addRoute('setEnergy', 'Fhem', 'setEnergy')
-    routes.addRoute('outputToJs', 'Webserver', 'send')
-    routes.addRoute('hue', 'Hue', 'do')
-    routes.addRoute('sensor', 'Api', 'sensor')
-    return routes

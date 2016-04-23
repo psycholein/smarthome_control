@@ -88,6 +88,7 @@ class Webserver(threading.Thread):
       template_path = template_path,
       autoreload    = False
     )
+    self.dispatcher.addRoute("outputToJs", self.send)
 
   def run(self):
     self.running = True

@@ -1,18 +1,16 @@
 import threading, thread
 
 class Dispatcher(threading.Thread):
-  def __init__(self, routes = None):
+  def __init__(self):
     super(self.__class__, self).__init__()
-    self.routes   = routes
+    self.routes   = {}
     self.commands = []
     self.running  = False
     self.process  = threading.Event()
     self.work     = threading.Event()
-    self.objects  = {}
 
-  def addDispatchObject(self, *objs):
-    for obj in objs:
-      self.objects[obj.__class__.__name__] = obj
+  def addRoute(self, path, func):
+    self.routes[path] = func
 
   def run(self):
     self.running = True
@@ -23,14 +21,29 @@ class Dispatcher(threading.Thread):
     self.running = False
     self.process.set()
 
+  def decode(self, data):
+    if isinstance(data, basestring): return (data, None)
+    if not type(data) is dict:
+      try:
+        data = json.loads(data)
+      except:
+        return (None, None)
+
+    path = data.get('path')
+    params = {}
+    if data.get('params'):
+      for param in data.get('params'):
+        params[param] = data.get(param)
+    else:
+      params = data.get('values')
+    return (path, params)
+
   def _dispatch(self):
     while len(self.commands) > 0 and self.running:
       self.work.wait()
-      command = self.commands.pop()
-      route   = self.routes.findRoute(command)
-      if route and self.objects.has_key(route.get('class')):
-        obj = self.objects.get(route.get('class'))
-        getattr(obj, route.get('method'))(route.get('params'))
+      path, params = self.decode(self.commands.pop())
+      if path and self.routes.has_key(path):
+        self.routes[path](params)
 
     self.process.clear()
     return self.running

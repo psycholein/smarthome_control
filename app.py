@@ -20,8 +20,7 @@ class App:
 
     self.config = Config()
     self.values = Values()
-
-    self.dispatcher = Dispatcher(self.config.routes())
+    self.dispatcher = Dispatcher()
 
     self.hue = Hue(self.config.getHueIP(), self.dispatcher)
     self.hue.start()
@@ -39,18 +38,15 @@ class App:
     self.config.initDevices(self.fhem, self.values)
     self.fhem.start()
 
-    self.api = Api(self.values)
+    self.api = Api(self.values, self.dispatcher)
 
     self.events = Events(self.dispatcher)
     self.events.start()
 
-    self.webserver = Webserver(self.values, self.dispatcher, 80)
+    self.webserver = Webserver(self.values, self.dispatcher, self.config.getWebserverPort())
     self.webserver.start()
 
-    self.dispatcher.addDispatchObject(
-      self, self.hue, self.pilight, self.fhem, self.events, self.webserver, self.api)
     self.dispatcher.start()
-
     self.serve()
 
     self.clearPid()

@@ -12,6 +12,7 @@ class Hue(threading.Thread):
     self.process    = threading.Event()
     self.running    = True
     self.commands   = []
+    self.dispatcher.addRoute("hue", self.do)
 
   def run(self):
     while self._dispatch():
