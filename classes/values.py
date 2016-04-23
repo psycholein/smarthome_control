@@ -10,7 +10,7 @@ class Values:
     collection = self.collections.get(uid)
     if not collection: return
     data = self.data[collection['category']][collection['name']].get(str(typ))
-    if !data:
+    if not data:
       self.data[collection['category']][collection['name']][str(typ)] = {}
       data = self.data[collection['category']][collection['name']][str(typ)]
     if data[str(typ)].get('value') != value:
