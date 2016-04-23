@@ -23,7 +23,7 @@ var App = {
 
   updateData: function(data) {
     $.each(data, function(category, collections){
-      $.each(data, function(collection, values){
+      $.each(collections, function(collection, values){
         $.each(values, function(key, value){
           var selector = '[data-collection="'+collection+'"] .'+key;
           if ($(selector).prop("tagName") == 'SELECT')
