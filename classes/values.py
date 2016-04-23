@@ -17,12 +17,12 @@ class Values:
       self.changed = True
       data[str(typ)] = { 'value': value, 'date': time.strftime('%X') }
 
-  def addCollection(self, uid, catgeory, name):
-    self.collections[uid] = {'name': name, 'catgeory': catgeory}
-    if not self.data.has_key(catgeory): self.data[catgeory] = {}
-    self.data[catgeory][name] = { 'collection': self.collections[uid] }
-    self.data[catgeory] = sorted(self.data[catgeory])
+  def addCollection(self, uid, category, name):
+    self.collections[uid] = { 'name': name, 'category': category }
+    if not self.data.has_key(category): self.data[category] = {}
+    self.data[category][name] = { 'collection': self.collections[uid] }
+    self.data[category] = sorted(self.data[category])
 
 
-  def getValues(self, catgeory):
+  def getValues(self, category):
     return self.data.get(category, {})
