@@ -17,8 +17,8 @@ class Lcd(threading.Thread):
     self.running = True
     while self.running:
       values = copy.deepcopy(self.values.getValues('climate'))
-      for _, val in values:
-        self.showData(val)
+      for key in sorted(values):
+        self.showData(values[key])
         self.work.wait(5)
         if not self.running: return
       self.work.wait(1)

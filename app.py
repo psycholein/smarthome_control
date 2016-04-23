@@ -44,7 +44,7 @@ class App:
     self.events = Events(self.dispatcher)
     self.events.start()
 
-    self.webserver = Webserver(self.values, self.dispatcher)
+    self.webserver = Webserver(self.values, self.dispatcher, 80)
     self.webserver.start()
 
     self.dispatcher.addDispatchObject(

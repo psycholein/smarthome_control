@@ -63,7 +63,7 @@ class Clients:
 
 
 class Webserver(threading.Thread):
-  def __init__(self, values, dispatcher = None, port = 80):
+  def __init__(self, values, dispatcher = None, port = 3000):
     super(self.__class__, self).__init__()
 
     static_path     = os.path.dirname(__file__)+'/../web/static'

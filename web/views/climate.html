@@ -1,5 +1,7 @@
 <ul>
-	{% for key, item in output.getValues('climate') %}
+	{% set items = output.getValues('climate') %}
+	{% for key in sorted(items) %}
+		{% set item = items[key] %}
 		<li data-collection="{{ item['collection']['name'] }}">
 			<label>{{ item['collection']['name'] }}:</label>
 			<ol>
