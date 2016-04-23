@@ -7,7 +7,7 @@ class Values:
     self.changed     = True
 
   def addValue(self, uid, typ, value):
-    collection = self.collections.get(uid)
+    collection = self.collections.get(str(uid))
     if not collection: return
     data = self.data[collection['category']][collection['name']].get(str(typ))
     if not data:
@@ -17,10 +17,10 @@ class Values:
       self.changed = True
       data[str(typ)] = { 'value': value, 'date': time.strftime('%X') }
 
-  def addCollection(self, uid, category, name):
-    self.collections[uid] = { 'name': name, 'category': category }
+  def addCollection(self, uid, name, category):
+    self.collections[str(uid)] = { 'name': name, 'category': category }
     if not self.data.has_key(category): self.data[category] = {}
-    self.data[category][name] = { 'collection': self.collections[uid] }
+    self.data[category][name] = { 'collection': self.collections[str(uid)] }
     self.data[category] = sorted(self.data[category])
 
 
