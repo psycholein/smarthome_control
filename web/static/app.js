@@ -22,13 +22,9 @@ var App = {
   },
 
   updateData: function(data) {
-    console.log(data)
     $.each(data, function(category, collections) {
-      console.log("1", category, collections)
       $.each(collections, function(collection, values) {
-        console.log("2", collection, values)
         $.each(values, function(key, value){
-          console.log("3", key, value)
           var selector = '[data-category="'+category+'"] [data-collection="'+collection+'"] .'+key;
           if ($(selector).prop("tagName") == 'SELECT')
             $(selector).val(value.value);
