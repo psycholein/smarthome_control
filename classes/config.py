@@ -7,7 +7,7 @@ class Config:
     self.devices = yaml.load(file('config/devices.yml', 'r'))
 
   def getWebserverPort(self):
-    return self.base.get('webserver')
+    return self.base.get('webserver', 3000)
 
   def getHueIP(self):
     return self.base.get('hue')
