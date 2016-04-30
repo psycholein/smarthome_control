@@ -1,4 +1,4 @@
-import threading, thread
+import threading, thread, json
 
 class Dispatcher(threading.Thread):
   def __init__(self):
@@ -22,11 +22,11 @@ class Dispatcher(threading.Thread):
     self.process.set()
 
   def decode(self, data):
-    if isinstance(data, basestring): return (data, None)
     if not type(data) is dict:
       try:
         data = json.loads(data)
-      except:
+      except ValueError as e:
+        if isinstance(data, basestring): return (data, None)
         return (None, None)
 
     path = data.get('path')
