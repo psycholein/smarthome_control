@@ -9,7 +9,7 @@ from classes.values import Values
 from classes.dispatcher import Dispatcher
 from classes.events import Events
 from classes.api import Api
-from classes.api import Logger
+from classes.logger import Logger
 
 class App:
 
@@ -34,9 +34,9 @@ class App:
     self.pilight.start()
     self.threads.append(self.pilight)
 
-    self.lcd = Lcd(self.values)
-    self.lcd.start()
-    self.threads.append(self.lcd)
+    #self.lcd = Lcd(self.values)
+    #self.lcd.start()
+    #self.threads.append(self.lcd)
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
     self.fhem.registerCallback(self.fhemCallback)

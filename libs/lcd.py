@@ -11,14 +11,14 @@ class Lcd(threading.Thread):
     self.work       = threading.Event()
     self.running    = True
     self.values     = values
-    # self.lcd        = lcd()
+    self.lcd        = lcd()
 
   def run(self):
     self.running = True
     while self.running:
       values = copy.deepcopy(self.values.getValues('climate'))
       for key in sorted(values):
-        # self.showData(values[key])
+        self.showData(values[key])
         self.work.wait(5)
         if not self.running: return
       self.work.wait(1)
