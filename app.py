@@ -9,6 +9,7 @@ from classes.values import Values
 from classes.dispatcher import Dispatcher
 from classes.events import Events
 from classes.api import Api
+from classes.api import Logger
 
 class App:
 
@@ -48,6 +49,10 @@ class App:
     self.events = Events(self.dispatcher)
     self.events.start()
     self.threads.append(self.events)
+
+    self.logger = Logger(self.values)
+    self.logger.start()
+    self.threads.append(self.logger)
 
     self.webserver = Webserver(self.values, self.dispatcher, self.config.getWebserverPort())
     self.webserver.start()
