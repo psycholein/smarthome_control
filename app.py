@@ -17,6 +17,7 @@ class App:
   def __init__(self):
     print "starting smarthome..."
     self.setPid()
+    self.threads = []
 
     self.config = Config()
     self.values = Values()
@@ -24,29 +25,35 @@ class App:
 
     self.hue = Hue(self.config.getHueIP(), self.dispatcher)
     self.hue.start()
+    self.threads.append(self.hue)
 
     self.pilight = PilightClient(self.dispatcher)
     self.pilight.registerCallback(self.switchCallback, 'protocol', ['arctech_screen'])
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['alecto_ws1700'])
     self.pilight.start()
+    self.threads.append(self.pilight)
 
     self.lcd = Lcd(self.values)
     self.lcd.start()
+    self.threads.append(self.lcd)
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
     self.fhem.registerCallback(self.fhemCallback)
     self.config.initDevices(self.fhem, self.values)
     self.fhem.start()
+    self.threads.append(self.fhem)
 
     self.api = Api(self.values, self.dispatcher)
 
     self.events = Events(self.dispatcher)
     self.events.start()
+    self.threads.append(self.events)
 
     self.webserver = Webserver(self.values, self.dispatcher, self.config.getWebserverPort())
     self.webserver.start()
 
     self.dispatcher.start()
+    self.threads.append(self.dispatcher)
     self.serve()
 
     self.clearPid()
@@ -67,11 +74,10 @@ class App:
 
   def serve(self):
     print "started!\n"
-    threads = [self.hue, self.pilight, self.fhem, self.events, self.dispatcher, self.lcd]
     while True:
       try:
         run = False
-        for thread in threads:
+        for thread in self.threads:
           self.sendChanges()
           thread.join(1)
           if thread.isAlive(): run = True
@@ -79,7 +85,7 @@ class App:
           self.webserver.stop()
           return
       except KeyboardInterrupt:
-        for thread in threads: thread.stop()
+        for thread in self.threads: thread.stop()
 
   def sendChanges(self):
     if self.values.changed:
