@@ -83,6 +83,8 @@ class App:
           if thread.isAlive(): run = True
         if not run:
           self.webserver.stop()
+          for thread in self.threads:
+            if thread.isAlive(): thread.stop()
           return
       except KeyboardInterrupt:
         for thread in self.threads: thread.stop()
