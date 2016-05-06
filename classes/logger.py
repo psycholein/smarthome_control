@@ -13,7 +13,7 @@ class Logger(threading.Thread):
   def run(self):
     self.running = True
     while self.log():
-      self.work.wait(10)
+      self.work.wait(300)
 
   def db(self):
     conn = sqlite3.connect('logger.db')
