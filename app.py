@@ -10,6 +10,7 @@ from classes.dispatcher import Dispatcher
 from classes.events import Events
 from classes.api import Api
 from classes.logger import Logger
+from classes.highcharts import Highcharts
 
 class App:
 
@@ -53,6 +54,8 @@ class App:
     self.logger = Logger(self.values)
     self.logger.start()
     self.threads.append(self.logger)
+
+    self.highcharts = Highcharts(self.logger, self.dispatcher)
 
     self.webserver = Webserver(self.values, self.dispatcher, self.config.getWebserverPort())
     self.webserver.start()
@@ -99,7 +102,10 @@ class App:
       data = {
         'params': ['path', 'values'],
         'path':   'outputToJs',
-        'values': self.values.getValues()
+        'values': {
+          'type': 'values',
+          'data': self.values.getValues()
+        }
       }
       self.values.changed = False
       self.dispatcher.send(data)

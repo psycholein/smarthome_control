@@ -1,7 +1,7 @@
 import threading, thread, time, sqlite3, copy
 
 class Logger(threading.Thread):
-  types = ['humidity', 'temperature', 'desired-temp', 'state']
+  types = ['humidity', 'temperature', 'measured-temp', 'desired-temp', 'state']
 
   def __init__(self, values):
     super(self.__class__, self).__init__()
@@ -13,14 +13,15 @@ class Logger(threading.Thread):
   def run(self):
     self.running = True
     while self.log():
-      self.work.wait(300)
+      self.work.wait(10)
 
   def db(self):
     conn = sqlite3.connect('logger.db')
     conn.row_factory = sqlite3.Row
+    return conn
 
   def log(self):
-    if self.logs > 0:
+    if self.logs > 0 and self.running:
       conn = self.db()
       c = conn.cursor()
       c.execute('''CREATE TABLE IF NOT EXISTS logger (
@@ -46,18 +47,24 @@ class Logger(threading.Thread):
           value = values.get('value')
           uid   = values.get('uid')
           if not uid or not value: continue
-          if uid not in self.types: continue
+          if typ not in self.types: continue
 
           log = (uid, category, collection, typ, value, timestamp,)
           c.execute('INSERT INTO logger VALUES (?,?,?,?,?,?)', log)
           conn.commit()
 
-  def readLogs(self, category, collection, typ, since = None):
+  def readLogs(self, category, collection, typ = None, since = None):
     if not since: since = time.time() - 3600 * 48
     conn = self.db()
     c = conn.cursor()
-    query = (since, category, collection, typ,)
-    c.execute('''SELECT * FROM logger
-                   WHERE timestamp>=? and category=? and
-                         collection=? and typ=?''', query)
+    if not typ:
+      query = (since, category, collection,)
+      c.execute('''SELECT * FROM logger
+                     WHERE timestamp>=? and category=? and
+                           collection=?''', query)
+    else:
+      query = (since, category, collection, typ,)
+      c.execute('''SELECT * FROM logger
+                     WHERE timestamp>=? and category=? and
+                           collection=? and typ=?''', query)
     return c.fetchall()

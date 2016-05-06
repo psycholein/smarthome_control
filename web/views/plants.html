@@ -6,7 +6,7 @@
 			<label>{{ item['collection']['name'] }}:</label>
 			<ol>
 				<li class="sensor">
-					Status: <span class="humidity">{{ item.get('humidity',{}).get('value','') }}</span>
+					Status: <span class="humidity" data-typ="humidity">{{ item.get('humidity',{}).get('value','') }}</span>
 					<small>(<span class="device_date">{{ item.get('device',{}).get('date','') }}</span>)</small>
 				</li>
 			</ol>

@@ -7,14 +7,26 @@ var App = {
   init: function() {
     $('#tabs').tabs();
     $('body').on('change', '[data-route][data-event="change"]', App.sendData);
+    $('body').on('click', '[data-category="climate"] [data-collection] > label', App.getHighchart);
   },
 
   sendData: function(e) {
     var data = {
-      'path':   $(this).data('route'),
+      'path': $(this).data('route'),
       'values': {
         'device': $(this).attr('name'),
         'value': $(this).val()
+      }
+    };
+    App.network.send(JSON.stringify(data));
+  },
+
+  getHighchart: function(e) {
+    var data = {
+      'path': 'highchart',
+      'values': {
+        'category': $(e.currentTarget).closest('[data-category]').data('category'),
+        'collection': $(e.currentTarget).closest('[data-collection]').data('collection')
       }
     };
     App.network.send(JSON.stringify(data));
@@ -38,9 +50,15 @@ var App = {
     });
   },
 
+  highchart: function(data) {
+    console.log(data);
+  },
+
   routes: function(data) {
-    switch (data.path) {
-      case 'outputToJs': return App.updateData(data.values);
+    if (data.path != 'outputToJs') return;
+    switch (data.values.type) {
+      case 'values': return App.updateData(data.values.data);
+      case 'highchart': return App.highchart(data.values.data);
     }
   },
 

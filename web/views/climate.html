@@ -7,16 +7,16 @@
 			<ol>
 				<li class="sensor">
 					Sensor:
-					<span class="temperature">{{ item.get('temperature',{}).get('value','') }}</span>°C,
-					<span class="humidity">{{ item.get('humidity',{}).get('value','') }}</span>%
+					<span class="temperature" data-typ="temperature">{{ item.get('temperature',{}).get('value','') }}</span>°C,
+					<span class="humidity" data-typ="humidity">{{ item.get('humidity',{}).get('value','') }}</span>%
 					<small>(<span class="temperature_date">{{ item.get('temperature',{}).get('date','00:00:00') }}</span>)</small>
 				</li>
 				{% if item.get('device') %}
 					<li class="heat">
 						Heizung:
-						<span class="measured-temp">{{ item.get('measured-temp',{}).get('value','') }}</span>°C
+						<span class="measured-temp" data-typ="measured-temp">{{ item.get('measured-temp',{}).get('value','') }}</span>°C
 						<span>
-							<select class="desired-temp" name="{{ item.get('device',{}).get('value','') }}" data-route="setDesiredTemp" data-event="change">
+							<select class="desired-temp" data-typ="desired-temp" name="{{ item.get('device',{}).get('value','') }}" data-route="setDesiredTemp" data-event="change">
 								{% for i in range(30) %}
 									{% set temp = i * 0.5 + 15 %}
 									{% set desired = item.get('desired-temp',{}).get('value','') %}

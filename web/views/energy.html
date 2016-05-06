@@ -6,7 +6,7 @@
 		<li data-collection="{{ item['collection']['name'] }}">
 			<label>{{ item['collection']['name'] }}:</label>
 			<ol>
-				<li class="sensor">
+				<li class="sensor" data-typ="state">
 					Status:
           <label>
             <input class="state" type="radio" name="{{ item.get('device',{}).get('value','') }}" data-route="setEnergy" data-event="change" {% if 'on' in state %}checked="checked"{% end %} value="on">
