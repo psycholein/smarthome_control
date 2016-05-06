@@ -68,3 +68,9 @@ body * {
 .data ul > li ol li small {
   font-size: 12px;
 }
+
+.highchart {
+  width: 100%;
+  height: 300px;
+  margin-bottom: 20px;
+}

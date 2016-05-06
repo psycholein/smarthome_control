@@ -15,9 +15,15 @@ class Logger(threading.Thread):
     while self.log():
       self.work.wait(300)
 
+  def dict_factory(self, cursor, row):
+      d = {}
+      for idx,col in enumerate(cursor.description):
+          d[col[0]] = row[idx]
+      return d
+
   def db(self):
     conn = sqlite3.connect('logger.db')
-    conn.row_factory = sqlite3.Row
+    conn.row_factory = self.dict_factory
     return conn
 
   def log(self):
@@ -60,11 +66,11 @@ class Logger(threading.Thread):
     if not typ:
       query = (since, category, collection,)
       c.execute('''SELECT * FROM logger
-                     WHERE timestamp>=? and category=? and
-                           collection=?''', query)
+                     WHERE timestamp>=? and category=? and collection=?
+                     ORDER BY CAST(timestamp AS INTEGER) ASC''', query)
     else:
       query = (since, category, collection, typ,)
       c.execute('''SELECT * FROM logger
-                     WHERE timestamp>=? and category=? and
-                           collection=? and typ=?''', query)
+                     WHERE timestamp>=? and category=? and collection=? and
+                     typ=? ORDER BY CAST(timestamp AS INTEGER) ASC''', query)
     return c.fetchall()

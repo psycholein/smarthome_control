@@ -22,6 +22,10 @@ var App = {
   },
 
   getHighchart: function(e) {
+    if ($(e.currentTarget).closest('[data-collection]').find('.highchart').length > 0) {
+      return $(e.currentTarget).closest('[data-collection]').find('.highchart').remove();
+    }
+    $(e.currentTarget).closest('[data-collection]').append($('<div>', { class: 'highchart'}));
     var data = {
       'path': 'highchart',
       'values': {
@@ -51,7 +55,10 @@ var App = {
   },
 
   highchart: function(data) {
-    console.log(data);
+    if (!data || data.length == 0) return;
+    ele = $('[data-category='+data[0].category+'] [data-collection='+data[0].collection+'] .highchart');
+    if (ele.length == 0) return;
+    Highchart.setup(data, ele);
   },
 
   routes: function(data) {
