@@ -3,7 +3,7 @@ import threading, thread, time, sqlite3, copy
 class Logger(threading.Thread):
   types = ['humidity', 'temperature', 'desired-temp', 'state']
 
-  def __init__(self):
+  def __init__(self, values):
     super(self.__class__, self).__init__()
     self.values  = values
     self.work    = threading.Event()
