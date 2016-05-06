@@ -1,12 +1,11 @@
 var App = {
   setup: function() {
-    document.querySelector("template").view = 0;
     App.network.connect();
-
-    $(window).bind('polymer-ready', App.init);
+    App.init();
   },
 
   init: function() {
+    $('#tabs').tabs();
     $('body').on('change', '[data-route][data-event="change"]', App.sendData);
   },
 
