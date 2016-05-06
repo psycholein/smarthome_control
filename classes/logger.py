@@ -22,8 +22,8 @@ class Logger(threading.Thread):
       c.execute('''CREATE TABLE IF NOT EXISTS logger (
                      uid text, category text, collection text, typ text,
                      value text, timestamp text)''')
-      self.addLogs(c)
       conn.commit()
+      self.addLogs(c, conn)
       conn.close()
 
     self.logs += 1
@@ -33,7 +33,7 @@ class Logger(threading.Thread):
     self.running = False
     self.work.set()
 
-  def addLogs(self, c):
+  def addLogs(self, c, conn):
     timestamp = time.time()
     data = copy.deepcopy(self.values.getValues())
     for category, collections in data.iteritems():
@@ -46,3 +46,4 @@ class Logger(threading.Thread):
 
           log = (uid, category, collection, typ, value, timestamp)
           c.execute('INSERT INTO logger VALUES (?,?,?,?,?,?)', log)
+          conn.commit()
