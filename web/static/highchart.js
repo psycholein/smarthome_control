@@ -1,6 +1,7 @@
 var Highchart = {
   setup: function(data, ele) {
     if (data.length == 0) return;
+    Highchart.timezone();
     var result = {};
     $.each(data, function(i, value) {
       if ($.inArray(value.typ, Highchart.temperature) >= 0) {
@@ -81,5 +82,15 @@ var Highchart = {
       shared: true
     },
     series: []
+  },
+
+  timezone: function() {
+    var d = new Date();
+    var t = d.getTimezoneOffset();
+    Highcharts.setOptions({
+      global: {
+        timezoneOffset: t
+      }
+    });
   }
 };
