@@ -19,7 +19,6 @@ var Highchart = {
         if (!result[value.typ]) {
           result[value.typ] = {
             name: value.typ,
-            type: 'column',
             yAxis: 1,
             tooltip: {
                 valueSuffix: ' %'
@@ -36,8 +35,7 @@ var Highchart = {
       series.push(value);
     });
     var chart = {
-      series: series,
-      title: { text: data[0].collection+' ('+data[0].category+')' }
+      series: series, title: { text: '' }
     };
     ele.highcharts($.extend(Highchart.base, chart)).show();
   },
@@ -46,7 +44,14 @@ var Highchart = {
   humidity: ['humidity'],
   base: {
     chart: {
-      type: 'line'
+      type: 'spline',
+      zoomType: 'x'
+    },
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
     },
     xAxis: {
       type: 'datetime',
@@ -66,8 +71,7 @@ var Highchart = {
       labels: {
         format: '{value}°C',
         style: { color: Highcharts.getOptions().colors[2] }
-      },
-      opposite: true
+      }
     }, {
       title: {
         text: 'Humidity',
@@ -76,7 +80,8 @@ var Highchart = {
       labels: {
         format: '{value} %',
         style: { color: Highcharts.getOptions().colors[0] }
-      }
+      },
+      opposite: true
     }],
     tooltip: {
       shared: true
