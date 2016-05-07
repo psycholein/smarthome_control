@@ -35,9 +35,10 @@ class App:
     self.pilight.start()
     self.threads.append(self.pilight)
 
-    self.lcd = Lcd(self.values)
-    self.lcd.start()
-    self.threads.append(self.lcd)
+    if self.config.hasLCD():
+      self.lcd = Lcd(self.values)
+      self.lcd.start()
+      self.threads.append(self.lcd)
 
     self.fhem = Fhem(self.config.getFhemIp(), self.config.getFhemPort(), self.dispatcher)
     self.fhem.registerCallback(self.fhemCallback)

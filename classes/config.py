@@ -21,6 +21,9 @@ class Config:
   def getFhemPort(self):
     return self.fhemData().get('port')
 
+  def hasLCD(self):
+    return self.base.get('lcd')
+
   def getClimates(self):
     return self.devices.get('climate').get('devices')
 
