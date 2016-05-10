@@ -33,6 +33,10 @@ class Logger(threading.Thread):
       c.execute('''CREATE TABLE IF NOT EXISTS logger (
                      uid text, category text, collection text, typ text,
                      value text, timestamp text)''')
+      c.execute('''CREATE INDEX IF NOT EXISTS search_without_typ ON logger
+                     (category, collection, timestamp)''')
+      c.execute('''CREATE INDEX IF NOT EXISTS search_with_typ ON logger
+                     (category, collection, timestamp, typ)''')
       conn.commit()
       self.addLogs(c, conn)
       conn.close()
