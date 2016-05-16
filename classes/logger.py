@@ -64,7 +64,7 @@ class Logger(threading.Thread):
           conn.commit()
 
   def readLogs(self, category, collection, typ = None, since = None):
-    if not since: since = time.time() - 3600 * 48
+    if not since: since = time.time() - 3600 * 24
     conn = self.db()
     c = conn.cursor()
     if not typ:
