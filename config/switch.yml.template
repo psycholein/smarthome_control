@@ -133,7 +133,7 @@
       do:
         -
           hue_cmd:
-            light: 5
+            light: 7
             cmd: 'on'
             val: false
     -
@@ -141,7 +141,7 @@
       do:
         -
           hue_cmd:
-            light: 5
+            light: 7
             cmd: 'on'
             val: true
         -
@@ -149,7 +149,7 @@
           do:
             -
               hue_cmd:
-                light: 5
+                light: 7
                 cmd: 'bri'
                 val: 1
         -
@@ -157,7 +157,7 @@
           do:
             -
               hue_cmd:
-                light: 5
+                light: 7
                 cmd: 'bri'
                 val: 75
     -
@@ -165,7 +165,7 @@
       do:
         -
           hue_cmd:
-            light: 5
+            light: 7
             cmd: 'on'
             val: true
         -
@@ -173,7 +173,7 @@
           do:
             -
               hue_cmd:
-                light: 5
+                light: 7
                 cmd: 'bri'
                 val: 150
         -
@@ -181,7 +181,7 @@
           do:
             -
               hue_cmd:
-                light: 5
+                light: 7
                 cmd: 'bri'
                 val: 255
     -
@@ -192,7 +192,7 @@
           do:
             -
               hue_cmd:
-                light: 5
+                light: 7
                 cmd: 'xy'
                 val: [255,0,0]
         -
@@ -200,6 +200,6 @@
           do:
             -
               hue_cmd:
-                light: 5
+                light: 7
                 cmd: 'xy'
                 val: [255,255,255]
