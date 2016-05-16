@@ -8,10 +8,9 @@ class Switch:
     if not code: return
     self.analyze(code, self.config)
 
-
   def analyze(self, code, config):
     do = None
-    cmd = None
+    cmd = {}
     found = False
     for item in config:
       if isinstance(item, dict):
@@ -22,19 +21,17 @@ class Switch:
         do = config[item]
         continue
       if item == 'hue_cmd':
-        cmd = { 'hue': config[item] }
+        cmd['hue'] = config[item]
         continue
       if str(code.get(item, -1)) == str(config[item]):
         found = True
 
-    if cmd:
-      values = cmd.get('hue')
-      if values:
-        data = {
-          'path': 'hue',
-          'values': values
-        }
-        self.dispatcher.send(data)
+    if cmd.get('hue'):
+      data = {
+        'path': 'hue',
+        'values': cmd.get('hue')
+      }
+      self.dispatcher.send(data)
 
     if found and do:
       self.analyze(code, do)
