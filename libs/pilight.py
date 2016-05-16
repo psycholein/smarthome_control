@@ -4,9 +4,8 @@ class PilightClient(threading.Thread):
 
   repeat_period = 10
 
-  def __init__(self, dispatcher = None):
+  def __init__(self):
     threading.Thread.__init__(self)
-    self.dispatcher = dispatcher
     self.callbacks  = []
     self.lastData   = {}
 
