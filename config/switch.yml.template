@@ -1,0 +1,205 @@
+# Lichtschalter Wohnzimmer
+-
+  id: 13583562
+  do:
+    -
+      unit: 10
+      do:
+        -
+          state: 'down'
+          do:
+            -
+              hue_cmd:
+                light: 3
+                cmd: 'on'
+                val: false
+        -
+          state: 'up'
+          do:
+            -
+              hue_cmd:
+                light: 3
+                cmd: 'on'
+                val: true
+            -
+              hue_cmd:
+                light: 3
+                cmd: 'bri'
+                val: 255
+
+      unit: 11
+      do:
+        -
+          hue_cmd:
+            light: 3
+            cmd: 'on'
+            val: true
+        -
+          state: 'down'
+          do:
+            -
+              hue_cmd:
+                light: 3
+                cmd: 'bri'
+                val: 32
+        -
+          state: 'up'
+          do:
+            -
+              hue_cmd:
+                light: 3
+                cmd: 'bri'
+                val: 127
+
+
+# Fernbedienung Wohnzimmer *************************************************
+-
+  id: 13184550
+  do:
+    -
+      all: 1
+      do:
+        -
+          hue_cmd:
+            light: [1,2,3,4]
+            cmd: 'on'
+            val: false
+    -
+      unit: 0
+      do:
+        -
+          state: 'up'
+          do:
+            -
+              hue_cmd:
+                light: [1,2]
+                cmd: 'on'
+                val: true
+        -
+          state: 'down'
+          do:
+            -
+              hue_cmd:
+                light: [1,2]
+                cmd: 'on'
+                val: false
+    -
+      unit: 1
+      do:
+        -
+          state: 'up'
+          do:
+            -
+              hue_cmd:
+                light: 3
+                cmd: 'on'
+                val: true
+        -
+          state: 'down'
+          do:
+            -
+              hue_cmd:
+                light: 3
+                cmd: 'on'
+                val: false
+    -
+      unit: 2
+      do:
+        -
+          state: 'up'
+          do:
+            -
+              hue_cmd:
+                light: 4
+                cmd: 'on'
+                val: true
+        -
+          state: 'down'
+          do:
+            -
+              hue_cmd:
+                light: 4
+                cmd: 'on'
+                val: false
+
+
+
+# Fernbedienung Schlafzimmer *************************************************
+-
+  id: 13205202
+  do:
+    -
+      all: 1
+      do:
+        -
+          hue_cmd:
+            light: 5
+            cmd: 'on'
+            val: false
+    -
+      unit: 0
+      do:
+        -
+          hue_cmd:
+            light: 5
+            cmd: 'on'
+            val: true
+        -
+          state: 'up'
+          do:
+            -
+              hue_cmd:
+                light: 5
+                cmd: 'bri'
+                val: 1
+        -
+          state: 'down'
+          do:
+            -
+              hue_cmd:
+                light: 5
+                cmd: 'bri'
+                val: 75
+    -
+      unit: 1
+      do:
+        -
+          hue_cmd:
+            light: 5
+            cmd: 'on'
+            val: true
+        -
+          state: 'up'
+          do:
+            -
+              hue_cmd:
+                light: 5
+                cmd: 'bri'
+                val: 150
+        -
+          state: 'down'
+          do:
+            -
+              hue_cmd:
+                light: 5
+                cmd: 'bri'
+                val: 255
+    -
+      unit: 2
+      do:
+        -
+          state: 'up'
+          do:
+            -
+              hue_cmd:
+                light: 5
+                cmd: 'xy'
+                val: [255,0,0]
+        -
+          state: 'down'
+          do:
+            -
+              hue_cmd:
+                light: 5
+                cmd: 'xy'
+                val: [255,255,255]

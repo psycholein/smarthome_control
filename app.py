@@ -11,6 +11,7 @@ from classes.events import Events
 from classes.api import Api
 from classes.logger import Logger
 from classes.highcharts import Highcharts
+from classes.switch import Switch
 
 class App:
 
@@ -29,11 +30,14 @@ class App:
     self.hue.start()
     self.threads.append(self.hue)
 
+    self.switch = Switch(self.dispatcher, self.config.getSwitchConfig())
+
     self.pilight = PilightClient(self.dispatcher)
-    self.pilight.registerCallback(self.switchCallback, 'protocol', ['arctech_screen'])
+    self.pilight.registerCallback(self.switch.callback, 'protocol', ['arctech_screen'])
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['alecto_ws1700'])
     self.pilight.start()
     self.threads.append(self.pilight)
+
 
     if self.config.hasLCD():
       self.lcd = Lcd(self.values)
@@ -136,71 +140,6 @@ class App:
 
     if temperature: self.values.addValue(code.get('id'), 'temperature', temperature)
     if humidity: self.values.addValue(code.get('id'), 'humidity', humidity)
-
-  def switchCallback(self, data):
-    code = data.get('message')
-    if not code: return
-
-    # TODO config
-    # Wohnzimmer Lichtschalter
-    if code.get('id', -1) == 13583562:
-      if code.get('unit', -1) == 10:
-        if code.get('state', '') == 'down':
-          self.hue.do({'light': 3, 'cmd': 'on', 'val': False})
-        if code.get('state', '') == 'up' :
-          self.hue.do({'light': 3, 'cmd': 'on', 'val': True})
-          self.hue.do({'light': 3, 'cmd': 'bri', 'val': 255})
-      if code.get('unit', -1) == 11:
-        self.hue.do({'light': 3, 'cmd': 'on', 'val': True})
-        if code.get('state', '') == 'down':
-          self.hue.do({'light': 3, 'cmd': 'bri', 'val': 32})
-        if code.get('state', '') == 'up' :
-          self.hue.do({'light': 3, 'cmd': 'bri', 'val': 127})
-
-    # Wohnzimmer Fernbedienung
-    if code.get('id', -1) == 13184550:
-      if code.get('all', -1) == 1:
-        self.hue.do({'light': [1,2,3,4], 'cmd': 'on', 'val': False})
-      if code.get('unit', -1) == 0:
-        if code.get('state', '') == 'up' :
-          self.hue.do({'light': [1,2], 'cmd': 'on', 'val': True})
-        if code.get('state', '') == 'down' :
-          self.hue.do({'light': [1,2], 'cmd': 'on', 'val': False})
-      if code.get('unit', -1) == 1:
-        if code.get('state', '') == 'up' :
-          self.hue.do({'light': 3, 'cmd': 'on', 'val': True})
-        if code.get('state', '') == 'down' :
-          self.hue.do({'light': 3, 'cmd': 'on', 'val': False})
-      if code.get('unit', -1) == 2:
-        if code.get('state', '') == 'up' :
-          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
-        if code.get('state', '') == 'down' :
-          self.hue.do({'light': 4, 'cmd': 'on', 'val': False})
-
-
-    # Schlafzimmer 2 Fernbedienungen
-    if code.get('id', -1) == 13205286 or code.get('id', -1) == 13205202:
-      if code.get('all', -1) == 1:
-        self.hue.do({'light': [4], 'cmd': 'on', 'val': False})
-      if code.get('unit', -1) == 0:
-        if code.get('state', '') == 'up' :
-          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
-          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 1})
-        if code.get('state', '') == 'down' :
-          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
-          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 75})
-      if code.get('unit', -1) == 1:
-        if code.get('state', '') == 'up' :
-          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
-          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 150})
-        if code.get('state', '') == 'down' :
-          self.hue.do({'light': 4, 'cmd': 'on', 'val': True})
-          self.hue.do({'light': 4, 'cmd': 'bri', 'val': 255})
-      if code.get('unit', -1) == 2:
-        if code.get('state', '') == 'up' :
-          self.hue.do({'light': 4, 'cmd': 'xy', 'val': self.hue.RGB2CIE(0,255,0)})
-        if code.get('state', '') == 'down' :
-          self.hue.do({'light': 4, 'cmd': 'xy', 'val': self.hue.RGB2CIE(255,255,0)})
 
 def main():
   App()

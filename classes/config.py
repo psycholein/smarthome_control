@@ -1,10 +1,14 @@
-import yaml
+import yaml, sys
 
 class Config:
 
   def __init__(self):
     self.base = yaml.load(file('config/base.yml', 'r'))
     self.devices = yaml.load(file('config/devices.yml', 'r'))
+    self.switch = yaml.load(file('config/switch.yml', 'r'))
+
+  def getSwitchConfig(self):
+    return self.switch
 
   def getWebserverPort(self):
     return self.base.get('webserver', 3000)
