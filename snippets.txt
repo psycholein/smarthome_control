@@ -1,3 +1,5 @@
 http://192.168.0.227:8083/fhem?room=Arbeitszimmer&dev.CUL_HM_HM_CC_RT_DN_319E0E_Clima=CUL_HM_HM_CC_RT_DN_319E0E_Clima&arg.CUL_HM_HM_CC_RT_DN_319E0E_Clima=desired-temp&val.CUL_HM_HM_CC_RT_DN_319E0E_Clima=25&cmd.CUL_HM_HM_CC_RT_DN_319E0E_Clima=set
 
 http://192.168.0.227:8083/fhem?cmd=jsonlist2&XHR=1
+
+// curl --header "Authorization: key=AIzaSyD5-AF5cvOqUa8cAhKKEi1EsUHsS_-ikBQ" --header "Content-Type: application/json" https://android.googleapis.com/gcm/send -d "{\"registration_ids\":[\"fPFOvn5X-50:APA91bH2LKETf2UGqcJwO5mme3h3ma9xD8Tjdk2FYBtMui9AfIhuneQipWR6uMpu5lH0r68ehKUgeNxU-09jBzrMm2vXzlHnZooW0CMdRqknzOF66BpQ0gbTWNXASvOhyEVOZ00SfTWq\"]}"
