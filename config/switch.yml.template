@@ -26,7 +26,7 @@
                 light: 3
                 cmd: 'bri'
                 val: 255
-
+    -
       unit: 11
       do:
         -
