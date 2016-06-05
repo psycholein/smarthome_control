@@ -1,4 +1,4 @@
-import yaml, sys
+import yaml, sys, json
 
 class Config:
 
@@ -17,7 +17,7 @@ class Config:
     return self.base.get('hue')
 
   def fhemData(self):
-    return self.base.get('fhem')
+    return self.base.get('fhem',{})
 
   def getFhemIp(self):
     return self.fhemData().get('ip')
@@ -29,21 +29,24 @@ class Config:
     return self.base.get('lcd')
 
   def getClimates(self):
-    return self.devices.get('climate').get('devices')
+    return self.devices.get('climate',{}).get('devices',[])
 
   def getClimateValues(self):
-    return {'attr': self.devices.get('climate').get('attr'),
+    return {'attr': self.devices.get('climate',{}).get('attr',''),
             'type': 'climate', 'config': self.getClimates()}
 
   def getEnergies(self):
-    return self.devices.get('energy').get('devices')
+    return self.devices.get('energy',{}).get('devices',[])
 
   def getEnergyValues(self):
-    return {'attr': self.devices.get('energy').get('attr'),
+    return {'attr': self.devices.get('energy',{}).get('attr',''),
             'type': 'energy', 'config': self.getEnergies()}
 
   def getPlants(self):
-    return self.devices.get('plant').get('devices')
+    return self.devices.get('plant',{}).get('devices',[])
+
+  def getSwitches(self):
+    return self.devices.get('switch',{}).get('devices',[])
 
   def initDevices(self, fhem, values):
     climates = self.getClimates()
@@ -64,3 +67,9 @@ class Config:
     for plant in plants:
       device = plant.get('device')
       values.addCollection(device, plant.get('room'), 'plant')
+
+    switches = self.getSwitches()
+    for switch in switches:
+      device = switch.get('device')
+      values.addCollection(device, switch.get('room'), 'switch')
+      values.addValue(device, 'config', json.dumps(switch))

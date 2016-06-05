@@ -21,4 +21,26 @@
 			</ol>
 		</li>
 	{% end %}
+
+	{% set items = output.getValues('switch') %}
+	{% for key in sorted(items) %}
+		{% set item = items[key] %}
+		{% set data = item.get('config',{}).get('value', {}) %}
+		<li data-collection="{{ item['collection']['name'] }}">
+			<label>{{ item['collection']['name'] }}:</label>
+			<ol>
+				<li class="switch" data-typ="state">
+          <label>
+            <button class="state" type="button" data-route="sendSwitch" data-event="click" data-values="{{ data }}" value="on">
+							An
+						</button>
+          </label>
+          <label>
+						<button class="state" type="button" data-route="sendSwitch" data-event="click" data-values="{{ data }}" value="off">
+							Aus
+						</button>
+				</li>
+			</ol>
+		</li>
+	{% end %}
 </ul>

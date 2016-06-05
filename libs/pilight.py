@@ -4,10 +4,20 @@ class PilightClient(threading.Thread):
 
   repeat_period = 10
 
-  def __init__(self):
+  def __init__(self, dispatcher):
     threading.Thread.__init__(self)
     self.callbacks  = []
     self.lastData   = {}
+    self.dispatcher = dispatcher
+    self.dispatcher.addRoute("sendSwitch", self.sendSwitch)
+
+    responses = self.discover("urn:schemas-upnp-org:service:pilight:1")
+    if len(responses) > 0:
+      locationsrc = re.search('Location:([0-9.]+):(.*)', str(responses[0]), re.IGNORECASE)
+      if locationsrc:
+        self.location = locationsrc.group(1)
+        self.port = locationsrc.group(2)
+
 
   def discover(self, service, timeout=5, retries=1):
     group = ("239.255.255.250", 1900)
@@ -86,40 +96,70 @@ class PilightClient(threading.Thread):
   def stop(self):
     self.stopped = True
 
-  def run(self):
-    self.stopped = False
-    responses = self.discover("urn:schemas-upnp-org:service:pilight:1")
-    if len(responses) > 0:
-      locationsrc = re.search('Location:([0-9.]+):(.*)', str(responses[0]), re.IGNORECASE)
-      if locationsrc:
-        location = locationsrc.group(1)
-        port = locationsrc.group(2)
+  def sendSwitch(self, command):
+    if not self.location or not self.port: return
 
-      s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-      s.connect((location, int(port)))
-      s.settimeout(None)
-      s.send('{"action":"identify","options":{"receiver":1}}\n')
+    systemcode = command.get('systemcode')
+    unitcode = command.get('unitcode')
+    state = command.get('value')
+    if not systemcode or not unitcode or not state: return
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((self.location, int(self.port)))
+    s.settimeout(None)
+    s.send('{"action":"identify"}\n')
+    data = ""
+    while True:
+      if self.stopped: return
+      ready = select.select([s], [], [], 10)
+      if not ready[0]: return
+      line = s.recv(1024)
+      data += line
+      if "\n\n" in line[-2:]:
+        data = data[:-2]
+        break
+    if data == '{"status":"success"}':
+      code  = '"protocol":["elro_800_switch"]'
+      code += ',"systemcode":'+str(systemcode)
+      code += ',"unitcode":'+str(unitcode)
+      if state == 'off':
+        code += ',"off":1'
+      else:
+        code += ',"on":1'
+      data = '{"action":"send","code":{'+code+'}}\n'
+      s.send(data*10)
+      print data
+    s.close()
+
+  def run(self):
+    if not self.location or not self.port: return
+    self.stopped = False
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((self.location, int(self.port)))
+    s.settimeout(None)
+    s.send('{"action":"identify","options":{"receiver":1}}\n')
+    data = ""
+    while True:
+      if self.stopped: return
+      ready = select.select([s], [], [], 10)
+      if not ready[0]: return
+      line = s.recv(1024)
+      data += line
+      if "\n\n" in line[-2:]:
+        data = data[:-2]
+        break
+    if data == '{"status":"success"}':
       data = ""
       while True:
         if self.stopped: return
-        ready = select.select([s], [], [], 10)
-        if not ready[0]: return
+        ready = select.select([s], [], [], 1)
+        if not ready[0]: continue
         line = s.recv(1024)
         data += line
         if "\n\n" in line[-2:]:
           data = data[:-2]
-          break
-      if data == '{"status":"success"}':
-        data = ""
-        while True:
-          if self.stopped: return
-          ready = select.select([s], [], [], 1)
-          if not ready[0]: continue
-          line = s.recv(1024)
-          data += line
-          if "\n\n" in line[-2:]:
-            data = data[:-2]
-            self.decode(data)
-            data = ""
-      s.close()
-      print "socket closed"
+          self.decode(data)
+          data = ""
+    s.close()
+    print "socket closed"

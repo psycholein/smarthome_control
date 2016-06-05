@@ -7,6 +7,7 @@ var App = {
   init: function() {
     $('#tabs').tabs();
     $('body').on('change', '[data-route][data-event="change"]', App.sendData);
+    $('body').on('click', '[data-route][data-event="click"]', App.sendData);
     $('body').on('click', '[data-category="climate"] [data-collection] > label', App.getHighchart);
   },
 
@@ -18,6 +19,10 @@ var App = {
         'value': $(this).val()
       }
     };
+    var values = $(this).data('values');
+    if (values) {
+      data.values = $.extend({}, values, {'value': $(this).val()});
+    }
     App.network.send(JSON.stringify(data));
   },
 

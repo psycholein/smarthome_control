@@ -3,7 +3,7 @@ from phue import Bridge
 
 class Hue(threading.Thread):
 
-  def __init__(self, ip, dispatcher = None):
+  def __init__(self, ip, dispatcher):
     threading.Thread.__init__(self)
     self.bridge = Bridge(ip)
     self.bridge.connect()

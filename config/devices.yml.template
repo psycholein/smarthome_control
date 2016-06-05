@@ -43,3 +43,11 @@ plant:
     -
       room: 'Artbeitszimmer'
       device: '1280850'
+
+switch:
+  devices:
+    -
+      room: 'Ambilight'
+      device: 'Ambilight'
+      systemcode: 21
+      unitcode: 4

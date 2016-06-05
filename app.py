@@ -32,7 +32,7 @@ class App:
 
     self.switch = Switch(self.dispatcher, self.config.getSwitchConfig())
 
-    self.pilight = PilightClient()
+    self.pilight = PilightClient(self.dispatcher)
     self.pilight.registerCallback(self.switch.callback, 'protocol', ['arctech_screen'])
     self.pilight.registerCallback(self.climateCallback, 'protocol', ['alecto_ws1700'])
     self.pilight.start()
