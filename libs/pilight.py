@@ -10,6 +10,8 @@ class PilightClient(threading.Thread):
     self.lastData   = {}
     self.dispatcher = dispatcher
     self.dispatcher.addRoute("sendSwitch", self.sendSwitch)
+    self.location = None
+    self.port = None
 
     responses = self.discover("urn:schemas-upnp-org:service:pilight:1")
     if len(responses) > 0:
