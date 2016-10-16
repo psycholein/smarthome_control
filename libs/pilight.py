@@ -1,4 +1,4 @@
-import socket, httplib, StringIO, struct, re, threading, select, json
+import socket, httplib, StringIO, struct, re, threading, select, json, time
 
 class PilightClient(threading.Thread):
 
@@ -13,13 +13,18 @@ class PilightClient(threading.Thread):
     self.location = None
     self.port = None
 
-    responses = self.discover("urn:schemas-upnp-org:service:pilight:1")
-    if len(responses) > 0:
-      locationsrc = re.search('Location:([0-9.]+):(.*)', str(responses[0]), re.IGNORECASE)
-      if locationsrc:
-        self.location = locationsrc.group(1)
-        self.port = locationsrc.group(2)
-
+  def pilightData(self):
+    i = 0
+    while i < 10 and not self.stopped:
+      responses = self.discover("urn:schemas-upnp-org:service:pilight:1")
+      if len(responses) > 0:
+        locationsrc = re.search('Location:([0-9.]+):(.*)', str(responses[0]), re.IGNORECASE)
+        if locationsrc:
+          self.location = locationsrc.group(1)
+          self.port = locationsrc.group(2)
+          return
+      i += 1
+      time.sleep(3)
 
   def discover(self, service, timeout=5, retries=1):
     group = ("239.255.255.250", 1900)
@@ -134,7 +139,10 @@ class PilightClient(threading.Thread):
     s.close()
 
   def run(self):
-    if not self.location or not self.port: return
+    self.stopped = False
+    pilightData()
+
+    if not self.location or not self.port or self.stopped: return
     self.stopped = False
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
