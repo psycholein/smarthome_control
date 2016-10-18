@@ -22,9 +22,9 @@ class App:
     self.setPid()
     self.threads = []
 
-    self.config = Config()
-    self.values = Values()
     self.dispatcher = Dispatcher()
+    self.config = Config(self.dispatcher)
+    self.values = Values()
 
     self.hue = Hue(self.config.getHueIP(), self.dispatcher)
     self.hue.start()

@@ -2,10 +2,18 @@ import yaml, sys, json
 
 class Config:
 
-  def __init__(self):
+  def __init__(self, dispatcher = None):
     self.base = yaml.load(file('config/base.yml', 'r'))
     self.devices = yaml.load(file('config/devices.yml', 'r'))
     self.switch = yaml.load(file('config/switch.yml', 'r'))
+    self.dispatcher = dispatcher
+    self.dispatcher.addRoute("config", self.callback)
+
+  def callback(self, values):
+    if values['value'] == 'reload':
+      self.values.reset()
+      self.initDevices(self.fhem, self.values)
+      print("RELOAD")
 
   def getSwitchConfig(self):
     return self.switch
@@ -49,6 +57,8 @@ class Config:
     return self.devices.get('switch',{}).get('devices',[])
 
   def initDevices(self, fhem, values):
+    self.fhem = fhem
+    self.values = values
     climates = self.getClimates()
     for climate in climates:
       values.addCollection(climate.get('clima'), climate.get('room'), 'climate')

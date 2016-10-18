@@ -140,7 +140,7 @@ class PilightClient(threading.Thread):
 
   def run(self):
     self.stopped = False
-    pilightData()
+    self.pilightData()
 
     if not self.location or not self.port or self.stopped: return
     self.stopped = False

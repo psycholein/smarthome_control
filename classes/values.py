@@ -2,9 +2,7 @@ import time
 
 class Values:
   def __init__(self):
-    self.data        = {}
-    self.collections = {}
-    self.changed     = True
+    self.reset()
 
   def addValue(self, uid, typ, value):
     collection = self.collections.get(str(uid))
@@ -23,3 +21,8 @@ class Values:
   def getValues(self, category = None):
     if not category: return self.data
     return self.data.get(category, {})
+
+  def reset(self):
+    self.data        = {}
+    self.collections = {}
+    self.changed     = True
