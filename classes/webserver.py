@@ -30,17 +30,13 @@ class ApiSensorHandler(tornado.web.RequestHandler):
 class ApiFhemHandler(tornado.web.RequestHandler):
   def initialize(self, dispatcher):
     self.dispatcher = dispatcher
-    self.last       = 0
 
   @tornado.web.asynchronous
   def get(self):
-    now = time.time()
-    if now > self.last:
-      print "FHEM UPDATE"
-      if self.dispatcher:
-        data = { 'path': 'fhem', 'values': { } }
-        self.dispatcher.send(data)
-        self.last = now + 1
+    print "FHEM UPDATE"
+    if self.dispatcher:
+      data = { 'path': 'fhem', 'values': { } }
+      self.dispatcher.send(data)
     self.clear()
     self.set_status(204)
     self.finish()

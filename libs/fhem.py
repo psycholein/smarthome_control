@@ -12,6 +12,7 @@ class Fhem(threading.Thread):
   def __init__(self, ip, port, dispatcher = None):
     threading.Thread.__init__(self)
     self.api        = "http://%s:%s%s" % (ip, port, self.prefix)
+    self.last       = 0
     self.dispatcher = dispatcher
     self.devices    = []
     self.callbacks  = []
@@ -30,7 +31,10 @@ class Fhem(threading.Thread):
     self.work.set()
 
   def trigger(self, values):
+    now = time.time()
+    if now <= self.last: return
     self.work.set()
+    self.last = now + 1
 
   def addDevice(self, name, values):
     if name and values: self.devices.append({'name': name, 'values': values})
