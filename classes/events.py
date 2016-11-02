@@ -46,8 +46,8 @@ class Events(threading.Thread):
     if float(data['from']) < self.time or float(data['to']) >= self.time: return
     pass
 
- def checkEnergy(self, event):
-   pass
+  def checkEnergy(self, event):
+    pass
 
   def stop(self):
     self.running = False
