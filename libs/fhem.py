@@ -33,8 +33,9 @@ class Fhem(threading.Thread):
   def trigger(self, values):
     now = time.time()
     if now <= self.last: return
-    self.work.set()
+    print "Fhem trigger"
     self.last = now + 1
+    self.work.set()
 
   def addDevice(self, name, values):
     if name and values: self.devices.append({'name': name, 'values': values})

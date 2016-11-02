@@ -1,5 +1,5 @@
 import tornado.ioloop, tornado.web, tornado.websocket
-import threading, os, json, time
+import threading, os, json
 
 from classes.values import Values
 
@@ -33,7 +33,6 @@ class ApiFhemHandler(tornado.web.RequestHandler):
 
   @tornado.web.asynchronous
   def get(self):
-    print "FHEM UPDATE"
     if self.dispatcher:
       data = { 'path': 'fhem', 'values': { } }
       self.dispatcher.send(data)
