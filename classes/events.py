@@ -34,8 +34,9 @@ class Events(threading.Thread):
   def check(self):
     self.defineValues()
     for event in self.events:
+      if not self.running: return self.running
       if event['typ'] == 'climate': self.checkClimate(event)
-      if self.running == false: return self.running
+      if event['typ'] == 'energy': self.checkEnergy(event)
     self.work.clear()
     return self.running
 
@@ -44,6 +45,9 @@ class Events(threading.Thread):
     if not data.week in self.week: return
     if float(data['from']) < self.time or float(data['to']) >= self.time: return
     pass
+
+ def checkEnergy(self, event):
+   pass
 
   def stop(self):
     self.running = False

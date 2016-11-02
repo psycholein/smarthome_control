@@ -1,5 +1,5 @@
 import tornado.ioloop, tornado.web, tornado.websocket
-import threading, os, json
+import threading, os, json, time
 
 from classes.values import Values
 
@@ -22,6 +22,20 @@ class ApiSensorHandler(tornado.web.RequestHandler):
         'path':   'sensor',
         'values': { 'device': sensor, 'value': value }
       }
+      self.dispatcher.send(data)
+    self.clear()
+    self.set_status(204)
+    self.finish()
+
+class ApiFhemHandler(tornado.web.RequestHandler):
+  def initialize(self, dispatcher):
+    self.dispatcher = dispatcher
+
+  @tornado.web.asynchronous
+  def get(self):
+    print "FHEM UPDATE"
+    if self.dispatcher:
+      data = { 'path': 'fhem', 'values': { } }
       self.dispatcher.send(data)
     self.clear()
     self.set_status(204)
@@ -82,6 +96,9 @@ class Webserver(threading.Thread):
         (r'/api/sensor/(.*)/(.*)', ApiSensorHandler, {
                                     "dispatcher": self.dispatcher
                                    }),
+        (r'/api/fhem', ApiFhemHandler, {
+                         "dispatcher": self.dispatcher
+                       }),
         (r'/', IndexHandler, { "output": self.values }),
       ],
       static_path   = static_path,

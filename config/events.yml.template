@@ -1,23 +1,23 @@
 climate:
   -
-    room: Schlafzimmer
+    room: Wohnzimmer
     week: Mo-So
-    from: "8.00"
+    from: "7.00"
     to: "20.00"
     temperature: 22.5
     typ: measure
-    timeout: 15
+    timeout: 30
   -
-    room: Schlafzimmer
+    room: Wohnzimmer
     week: Mo-So
     from: "20.00"
-    to: "8.00"
+    to: "7.00"
     temperature: 21.0
     typ: set
 
 energy:
   -
-    name: Steckdose1
+    name: Luftentfeuchter
     on: "8.00"
     off: "18.00"
     reactivate: 60
