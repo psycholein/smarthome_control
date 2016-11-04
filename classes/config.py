@@ -56,6 +56,13 @@ class Config:
   def getSwitches(self):
     return self.devices.get('switch',{}).get('devices',[])
 
+  def getContacts(self):
+    return self.devices.get('contact',{}).get('devices',[])
+
+  def getContactsValues(self):
+    return {'attr': self.devices.get('contact',{}).get('attr',''),
+            'type': 'contact', 'config': self.getContacts()}
+
   def initDevices(self, fhem, values):
     self.fhem = fhem
     self.values = values
@@ -83,3 +90,9 @@ class Config:
       device = switch.get('device')
       values.addCollection(device, switch.get('room'), 'switch')
       values.addValue(device, 'config', json.dumps(switch))
+
+    contacts = self.getContacts()
+    for contact in contacts:
+      device = contact.get('device')
+      values.addCollection(device, contact.get('room'), 'contact')
+      fhem.addDevice(device, self.getContactsValues())

@@ -11,6 +11,18 @@
 					<span class="humidity" data-typ="humidity">{{ item.get('humidity',{}).get('value','') }}</span>%
 					<small>(<span class="temperature_date">{{ item.get('temperature',{}).get('date','00:00:00') }}</span>)</small>
 				</li>
+        {% set contact = output.getValuesCategoryAndRoom('contact', item['collection']['name']) %}
+        {% if contact and contact.get('state') %}
+          <li data-category="contact">
+            <div data-collection="{{ item['collection']['name'] }}">
+              Contact:
+              <span class="state">
+                {{ contact.get('state').get('value') }}
+              </span>
+              <small>(<span class="state_date">{{ contact.get('state').get('date', '00:00:00') }}</span>)</small>
+            </div>
+          </li>
+        {% end %}
 				{% if item.get('device') %}
 					<li class="heat">
 						Heizung:

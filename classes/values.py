@@ -22,6 +22,9 @@ class Values:
     if not category: return self.data
     return self.data.get(category, {})
 
+  def getValuesCategoryAndRoom(self, category, room):
+    return self.data.get(category, {}).get(room)
+
   def reset(self):
     self.data        = {}
     self.collections = {}

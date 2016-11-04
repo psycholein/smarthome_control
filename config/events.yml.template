@@ -18,6 +18,7 @@ climate:
 energy:
   -
     name: Luftentfeuchter
+    week: "Mo-Fr"
     on: "8.00"
     off: "18.00"
     reactivate: 60
