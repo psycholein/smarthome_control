@@ -9,6 +9,7 @@ class Events(threading.Thread):
     self.events     = []
     self.work       = threading.Event()
     self.time       = 0
+    self.last       = 0
     self.week       = []
     self.dispatcher.addRoute("events", self.trigger)
 
@@ -20,6 +21,9 @@ class Events(threading.Thread):
       })
 
   def trigger(self, values = None):
+    now = time.time()
+    if now <= self.last: return
+    self.last = now + 1
     self.work.set()
 
   def run(self):
