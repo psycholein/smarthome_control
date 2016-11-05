@@ -9,8 +9,13 @@ class Values:
     if not collection: return
     data = self.data[collection['category']][collection['name']]
     if not data.get(typ): data[typ] = {}
-    if data[typ].get('value') != value: self.changed = True
-    data[typ] = { 'value': value, 'date': time.strftime('%X'), 'uid': uid }
+
+    updated = data[typ].get('updated')
+    if data[typ].get('value') != value:
+      self.changed = True
+      updated = time.strftime('%X')
+    data[typ] = { 'value': value, 'date': time.strftime('%X'),
+                  'uid': uid, 'updated': updated }
 
   def addCollection(self, uid, name, category):
     self.collections[str(uid)] = { 'name': name, 'category': category }

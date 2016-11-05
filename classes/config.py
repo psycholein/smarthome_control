@@ -6,6 +6,7 @@ class Config:
     self.base = yaml.load(file('config/base.yml', 'r'))
     self.devices = yaml.load(file('config/devices.yml', 'r'))
     self.switch = yaml.load(file('config/switch.yml', 'r'))
+    self.events = yaml.load(file('config/events.yml', 'r'))
     self.dispatcher = dispatcher
     self.dispatcher.addRoute("config", self.callback)
 
@@ -96,3 +97,7 @@ class Config:
       device = contact.get('device')
       values.addCollection(device, contact.get('room'), 'contact')
       fhem.addDevice(device, self.getContactsValues())
+
+  def initEvents(self, events):
+    for typ, data in self.events.iteritems():
+      for item in data: events.addEvent(typ, item)

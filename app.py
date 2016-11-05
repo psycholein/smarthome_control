@@ -52,7 +52,8 @@ class App:
 
     self.api = Api(self.values, self.dispatcher)
 
-    self.events = Events(self.dispatcher)
+    self.events = Events(self.values, self.dispatcher)
+    self.config.initEvents(self.events)
     self.events.start()
     self.threads.append(self.events)
 

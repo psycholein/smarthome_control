@@ -1,18 +1,43 @@
 climate:
   -
-    room: Wohnzimmer
-    week: Mo-So
+    room:
+      - Wohnzimmer
+    week: Sa-So
     from: "7.00"
-    to: "20.00"
+    to: "21.00"
     temperature: 22.5
-    typ: measure
-    timeout: 30
+    typ: set
   -
-    room: Wohnzimmer
+    room:
+      - Wohnzimmer
+    week: Mo-Fr
+    from: "6.00"
+    to: "8.00"
+    temperature: 22.5
+    typ: set
+  -
+    room:
+      - Wohnzimmer
+    week: Mo-Fr
+    from: "8.00"
+    to: "15.00"
+    temperature: 20.5
+    typ: set
+  -
+    room:
+      - Wohnzimmer
+    week: Mo-Fr
+    from: "15.00"
+    to: "21.00"
+    temperature: 22.5
+    typ: set
+  -
+    room:
+      - Wohnzimmer
     week: Mo-So
-    from: "20.00"
+    from: "21.00"
     to: "7.00"
-    temperature: 21.0
+    temperature: 20.5
     typ: set
 
 energy:
