@@ -19,7 +19,7 @@ class Events(threading.Thread):
         'status':  {}
       })
 
-  def trigger(self, values):
+  def trigger(self, values = None):
     self.work.set()
 
   def run(self):
