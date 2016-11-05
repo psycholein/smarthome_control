@@ -43,7 +43,12 @@ climate:
 energy:
   -
     name: Luftentfeuchter
-    week: "Mo-Fr"
-    on: "8.00"
-    off: "18.00"
+    week: "Mo-So"
+    from: "8.00"
+    to: "18.00"
+    humidity_start: 68
+    humidity_end: 64
+    temperature_closed: 22
+    temperature_opend: 15
     reactivate: 60
+    room: Badezimmer

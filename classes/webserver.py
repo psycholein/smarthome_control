@@ -36,6 +36,8 @@ class ApiFhemHandler(tornado.web.RequestHandler):
     if self.dispatcher:
       data = { 'path': 'fhem', 'values': { } }
       self.dispatcher.send(data)
+      data = { 'path': 'events', 'values': { } }
+      self.dispatcher.send(data)
     self.clear()
     self.set_status(204)
     self.finish()
