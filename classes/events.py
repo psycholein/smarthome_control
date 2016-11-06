@@ -67,7 +67,7 @@ class Events(threading.Thread):
 
   def checkEnergy(self, event):
     data = event['data']
-    energy = self.values.getValuesCategoryAndRoom('energy', data.get('room'))
+    energy = self.values.getValuesCategoryAndRoom('energy', data.get('name'))
     if not energy: return
     state = energy.get('state', {}).get('value')
     if state == 'off' and event['status'].get('on'):
