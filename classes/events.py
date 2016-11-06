@@ -62,11 +62,17 @@ class Events(threading.Thread):
       else:
         temp = time.localtime()
         today = datetime.date(temp.tm_year, temp.tm_mon, temp.tm_mday)
-        done = (today + datetime.timedelta(days = 1)) + ' ' + data.get('to')
+        done = str(today + datetime.timedelta(days = 1)) + ' ' + data.get('to')
         event['status']['done'] = done
 
   def checkEnergy(self, event):
     data = event['data']
+    energy = self.values.getValuesCategoryAndRoom('energy', data.get('room'))
+    if not energy: return
+    state = energy.get('state', {}).get('value')
+    if state == 'off' and event['status'].get('on'):
+      event['status']['opened'] = True
+      event['status']['on'] = False
     if not self.checkTime(data):
       if event['status'].get('on'):
         event['status']['on'] = False
