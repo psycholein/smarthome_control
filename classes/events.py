@@ -62,26 +62,25 @@ class Events(threading.Thread):
       else:
         temp = time.localtime()
         today = datetime.date(temp.tm_year, temp.tm_mon, temp.tm_mday)
-        done = today + datetime.timedelta(days = 1) + ' ' + data.get('to')
+        done = (today + datetime.timedelta(days = 1)) + ' ' + data.get('to')
         event['status']['done'] = done
 
   def checkEnergy(self, event):
     data = event['data']
     if not self.checkTime(data):
-      if event['status'].get('on', False):
+      if event['status'].get('on'):
         event['status']['on'] = False
         self.setEnergy(data.get('name'), 'off')
       return
     contact = self.values.getValuesCategoryAndRoom('contact', data.get('room'))
     if contact and contact.get('state', {}).get('value') == 'open':
-      self.setTemperature(data.get('room'), data.get('temperature_opend'))
+      self.setTemperature(data.get('room'), data.get('temperature_open'))
       self.setEnergy(data.get('name'), 'off')
       event['status']['on'] = False
       event['status']['opened'] = True
     else:
       self.setTemperature(data.get('room'), data.get('temperature_closed'))
-      react = format(datetime.datetime.now() - datetime.timedelta(minutes=data.get('reactivate')), '%H:%M:%S')
-      print(react, contact.get('state', {}).get('updated'))
+      react = format(datetime.datetime.now() - datetime.timedelta(minutes=data.get('reactivate', 30)), '%H:%M:%S')
       if contact and event['status'].get('opened', False) and contact.get('state', {}).get('updated', 0) > react: return
       event['status']['opened'] = False
       humidity = self.values.getValuesCategoryAndRoom('climate', data.get('room'))
