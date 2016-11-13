@@ -11,6 +11,7 @@ class Events(threading.Thread):
     self.time       = 0
     self.last       = 0
     self.week       = []
+    self.started    = time.time() + 120
     self.dispatcher.addRoute("events", self.trigger)
 
   def addEvent(self, typ, data):
@@ -41,6 +42,7 @@ class Events(threading.Thread):
       self.week.append('Sa-So')
 
   def check(self):
+    if self.started > time.time(): return self.running
     self.defineValues()
     for event in self.events:
       if not self.running: return self.running
