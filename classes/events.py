@@ -55,7 +55,7 @@ class Events(threading.Thread):
     data = event['data']
     if not self.checkTime(data): return
     now = time.strftime("%Y-%m-%d %H.%m").replace(' 0', ' ')
-    if event['status'].get('done', 0) > : now return
+    if event['status'].get('done', 0) > now: return
     done = True
     for room in data.get('room', []):
       if not self.setTemperature(room, data.get('temperature')): done = False
