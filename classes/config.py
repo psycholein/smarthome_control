@@ -3,18 +3,24 @@ import yaml, sys, json
 class Config:
 
   def __init__(self, dispatcher = None):
+    self.loadYamls()
+    self.dispatcher = dispatcher
+    self.dispatcher.addRoute("config", self.callback)
+
+  def loadYamls(self):
     self.base = yaml.load(file('config/base.yml', 'r'))
     self.devices = yaml.load(file('config/devices.yml', 'r'))
     self.switch = yaml.load(file('config/switch.yml', 'r'))
     self.events = yaml.load(file('config/events.yml', 'r'))
-    self.dispatcher = dispatcher
-    self.dispatcher.addRoute("config", self.callback)
 
   def callback(self, values):
-    if values['value'] == 'reload':
+    self.loadYamls()
+    if values['value'] == 'devices':
       self.values.reset()
       self.initDevices(self.fhem, self.values)
-      print("RELOAD")
+    if values['value'] == 'events':
+      self.my_events.reset()
+      self.initEvents(self.events)
 
   def getSwitchConfig(self):
     return self.switch
@@ -99,5 +105,6 @@ class Config:
       fhem.addDevice(device, self.getContactsValues())
 
   def initEvents(self, events):
+    self.my_events = events
     for typ, data in self.events.iteritems():
       for item in data: events.addEvent(typ, item)
