@@ -33,10 +33,10 @@ class Events(threading.Thread):
       self.work.wait(30)
 
   def defineValues(self):
-    time = datetime.datetime.today()
-    self.time = float("%d.%d" % (time.hour, time.minute))
+    today = datetime.datetime.today()
+    self.time = float("%d.%d" % (today.hour, today.minute))
     self.week = ['Mo-So']
-    if time.weekday() < 5:
+    if today.weekday() < 5:
       self.week.append('Mo-Fr')
     else:
       self.week.append('Sa-So')
@@ -54,18 +54,18 @@ class Events(threading.Thread):
   def checkClimate(self, event):
     data = event['data']
     if not self.checkTime(data): return
-    now = time.strftime("%Y-%m-%d %H.%m").replace(' 0', ' ')
+    now = time.strftime("%Y-%m-%d %H.%m")
     if event['status'].get('done', 0) > now: return
     done = True
     for room in data.get('room', []):
       if not self.setTemperature(room, data.get('temperature')): done = False
     if done:
       if float(data.get('from')) < float(data.get('to')):
-        event['status']['done'] = time.strftime("%Y-%m-%d ") + data.get('to')
+        event['status']['done'] = time.strftime("%Y-%m-%d") + " %05.2f" % float(data.get('to'))
       else:
         temp = time.localtime()
         today = datetime.date(temp.tm_year, temp.tm_mon, temp.tm_mday)
-        done = str(today + datetime.timedelta(days = 1)) + ' ' + data.get('to')
+        done = str(today + datetime.timedelta(days = 1)) + " %05.2f" % float(data.get('to'))
         event['status']['done'] = done
 
   def checkEnergy(self, event):
