@@ -13,7 +13,7 @@ class Logger(threading.Thread):
   def run(self):
     self.running = True
     while self.log():
-      self.work.wait(300)
+      self.work.wait(1)
 
   def dict_factory(self, cursor, row):
       d = {}
@@ -27,7 +27,7 @@ class Logger(threading.Thread):
     return conn
 
   def log(self):
-    if self.logs > 0 and self.running:
+    if self.logs > 10 and self.running:
       conn = self.db()
       c = conn.cursor()
       c.execute('''CREATE TABLE IF NOT EXISTS logger (
@@ -50,10 +50,14 @@ class Logger(threading.Thread):
 
   def addLogs(self, c, conn):
     timestamp = time.time()
+    if not self.values.changed: return
     data = copy.deepcopy(self.values.getValues())
     for category, collections in data.iteritems():
       for collection, typs in collections.iteritems():
         for typ, values in typs.iteritems():
+          if values.get('logged', False): continue
+          try: self.values.data[category][collection][typ]['logged'] = True
+          except: return
           value = values.get('value')
           uid   = values.get('uid')
           if not uid or not value: continue

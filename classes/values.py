@@ -11,11 +11,13 @@ class Values:
     if not data.get(typ): data[typ] = {}
 
     updated = data[typ].get('updated')
+    logged = data[typ].get('logged', False)
     if data[typ].get('value') != value:
       self.changed = True
       updated = time.strftime('%X')
+      logged = False
     data[typ] = { 'value': value, 'date': time.strftime('%X'),
-                  'uid': uid, 'updated': updated }
+                  'uid': uid, 'updated': updated, 'logged': logged }
 
   def addCollection(self, uid, name, category):
     self.collections[str(uid)] = { 'name': name, 'category': category }
